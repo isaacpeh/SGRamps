@@ -8,4 +8,14 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
+
+    <style name="bottomNavigation" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/secondary_blue</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="bottomNavigation.Active" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primary_blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

@@ -7,15 +7,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.os.Looper;
 import android.util.Log;
@@ -25,21 +19,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.Toast;
-
 import com.example.sgramps.adapters.PlacesAutoSuggestAdapter;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,17 +33,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -97,58 +75,7 @@ public class HomeFragment extends Fragment {
                     public void onClick(View view) {
                         FusedLocationProviderClient fusedLocationClient;
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-                        if (btnToggle == 0){
-                            btnToggle = 1;
-                            locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
-                                    .setWaitForAccurateLocation(true)
-                                    .setMinUpdateIntervalMillis(3000)
-                                    .setMaxUpdateDelayMillis(100)
-                                    .build();
-
-                            locationCallback = new LocationCallback() {
-                                @Override
-                                public void onLocationResult(@NonNull LocationResult locationResult) {
-                                    if (locationResult == null){
-                                        return;
-                                    } else {
-                                        for (Location location : locationResult.getLocations()) {
-                                            if (location != null) {
-                                                Double lat = location.getLatitude();
-                                                Double lng = location.getLongitude();
-                                                Log.d("GPS", "Lat: " + lat + " | long: " + lng);
-                                            }
-                                        }
-                                    }
-                                }
-                            };
-                            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                                        Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
-                            } else {
-                                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-                            }
-                        } else if (btnToggle == 1) {
-                            btnToggle = 0;
-
-                            try {
-                                Task<Void> voidTask = fusedLocationClient.removeLocationUpdates(locationCallback);
-                                voidTask.addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("GPS", "stopMonitoring: removeLocationUpdates successful.");
-                                        } else {
-                                            Log.d("GPS", "stopMonitoring: removeLocationUpdates updates unsuccessful! " + voidTask.toString());
-                                        }
-                                    }
-                                });
-                            } catch (SecurityException exp) {
-                                Log.d("GPS", "stopMonitoring: Security exception.");
-                            }
-                        }
+                        getLocation(fusedLocationClient);
                     }
                 });
 
@@ -184,6 +111,49 @@ public class HomeFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    // get current location
+    private void getLocation(FusedLocationProviderClient fusedLocationClient){
+        if (btnToggle == 0){
+            btnToggle = 1;
+            locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
+                    .setWaitForAccurateLocation(true)
+                    .setMinUpdateIntervalMillis(3000)
+                    .setMaxUpdateDelayMillis(100)
+                    .build();
+
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(@NonNull LocationResult locationResult) {
+                    if (locationResult == null){
+                        return;
+                    } else {
+                        for (Location location : locationResult.getLocations()) {
+                            if (location != null) {
+                                Double lat = location.getLatitude();
+                                Double lng = location.getLongitude();
+                                Log.d("GPS", "Lat: " + lat + " | long: " + lng);
+                                fusedLocationClient.removeLocationUpdates(locationCallback);
+                                moveMap(new LatLng(lat, lng));
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+            } else {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            }
+        } else if (btnToggle == 1) {
+            btnToggle = 0;
+            Log.d("GPS", "TODO: Change button icon to X to remove currently selected location");
+        }
     }
 
     // generate pin and move map

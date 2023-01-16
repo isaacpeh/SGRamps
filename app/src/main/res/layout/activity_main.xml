@@ -26,7 +26,10 @@
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu">
+        app:menu="@menu/menu"
+        app:itemTextAppearanceInactive="@style/bottomNavigation"
+        app:itemTextAppearanceActive="@style/bottomNavigation.Active"
+        app:itemTextColor="@drawable/bottom_nav_color_selection">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
