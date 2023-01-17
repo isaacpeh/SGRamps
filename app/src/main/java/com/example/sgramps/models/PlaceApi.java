@@ -57,7 +57,7 @@ public class PlaceApi {
         try {
             JSONObject jsonObject = new JSONObject(jsonResult.toString());
             JSONArray predictions = jsonObject.getJSONArray("predictions");
-            for (int i = 0; i <= predictions.length(); i++) {
+            for (int i = 0; i < predictions.length(); i++) {
                 arraylist.add(predictions.getJSONObject(i).getString("description"));
             }
         }

@@ -7,10 +7,23 @@ import androidx.fragment.app.Fragment;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import com.google.android.material.navigation.NavigationBarView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity{
+import com.example.sgramps.models.RampsModel;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+    private FirebaseFirestore db;
+    private ArrayList<RampsModel> rampsArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +37,29 @@ public class MainActivity extends AppCompatActivity{
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();
+
+
+        /*// TESTING HERE
+        db = FirebaseFirestore.getInstance();
+        // GET ENTIRE COLLECTION
+        db.collection("points").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list) {
+                                // getData() -> returns entire document
+                                // .getId() - > returns documentID
+                                // .getData().get("attribute") -> returns selected attribute
+                                Log.d("rampsMan", " " + d.getData().get("uploader") + " | " + d.getId()); //
+                                Toast.makeText(MainActivity.this, " " + d.getId(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });*/
 
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override

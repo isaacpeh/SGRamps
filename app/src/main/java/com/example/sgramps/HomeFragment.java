@@ -3,10 +3,12 @@ package com.example.sgramps;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -19,7 +21,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+
 import com.example.sgramps.adapters.PlacesAutoSuggestAdapter;
+import com.example.sgramps.models.RampsDAO;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -30,11 +34,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -43,6 +49,7 @@ public class HomeFragment extends Fragment {
     private int btnToggle = 0;
     LocationRequest locationRequest;
     LocationCallback locationCallback;
+    FirebaseFirestore firebase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +68,6 @@ public class HomeFragment extends Fragment {
 
         // initialize current location
         FloatingActionButton btnLocate = view.findViewById(R.id.btnLocation);
-
 
         // async map
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -114,8 +120,10 @@ public class HomeFragment extends Fragment {
     }
 
     // get current location
-    private void getLocation(FusedLocationProviderClient fusedLocationClient){
-        if (btnToggle == 0){
+    private void getLocation(FusedLocationProviderClient fusedLocationClient) {
+        RampsDAO dbRamps = new RampsDAO();
+
+        if (btnToggle == 0) {
             btnToggle = 1;
             locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
                     .setWaitForAccurateLocation(true)
@@ -126,7 +134,7 @@ public class HomeFragment extends Fragment {
             locationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {
-                    if (locationResult == null){
+                    if (locationResult == null) {
                         return;
                     } else {
                         for (Location location : locationResult.getLocations()) {
@@ -135,7 +143,9 @@ public class HomeFragment extends Fragment {
                                 Double lng = location.getLongitude();
                                 Log.d("GPS", "Lat: " + lat + " | long: " + lng);
                                 fusedLocationClient.removeLocationUpdates(locationCallback);
-                                moveMap(new LatLng(lat, lng));
+                                LatLng latLng = new LatLng(lat, lng);
+                                moveMap(latLng);
+                                generateCircle(latLng);
                             }
                         }
                     }
@@ -156,8 +166,24 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // generate radius circle and pins within radius
+    private void generateCircle(LatLng latlng) {
+        Circle circle = map.addCircle(new CircleOptions()
+                .center(latlng)
+                .radius(500)
+                .fillColor(Color.argb(30, 28, 130, 255))
+                .strokeColor(Color.argb(200, 4, 30, 224))
+                .strokeWidth(4));
+
+        // fetch all points
+        // compare all points latlng and current point latlng distance
+        // display pin if within radius
+        // https://stackoverflow.com/questions/22063842/check-if-a-latitude-and-longitude-is-within-a-circle
+        // https://developers.google.com/maps/documentation/javascript/examples/marker-accessibility
+    }
+
     // generate pin and move map
-    private void moveMap(LatLng latlng){
+    private void moveMap(LatLng latlng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
         markerOptions.title(latlng.latitude + " : " + latlng.longitude);
@@ -173,7 +199,7 @@ public class HomeFragment extends Fragment {
 
         try {
             addressList = geocoder.getFromLocationName(address, 1);
-            if(addressList != null) {
+            if (addressList != null) {
                 Address singleaddress = addressList.get(0);
                 LatLng latlng = new LatLng(singleaddress.getLatitude(), singleaddress.getLongitude());
                 return latlng;
@@ -181,7 +207,7 @@ public class HomeFragment extends Fragment {
                 return null;
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
