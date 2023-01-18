@@ -18,4 +18,21 @@
         <item name="android:textColor">@color/primary_blue</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Widget.SGRamps.Button" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/primary_blue</item>
+    </style>
+
+    <style name="Widget.SGRamps.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="Widget.SGRamps.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/active_indicator_blue</item>
+    </style>
+
+    <style name="Widget.SGRamps.BottomNav" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/active_indicator_blue</item>
+    </style>
+
 </resources>

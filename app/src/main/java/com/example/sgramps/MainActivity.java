@@ -38,29 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.frame_layout, fragment)
                 .commit();
 
-
-        /*// TESTING HERE
-        db = FirebaseFirestore.getInstance();
-        // GET ENTIRE COLLECTION
-        db.collection("points").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot d : list) {
-                                // getData() -> returns entire document
-                                // .getId() - > returns documentID
-                                // .getData().get("attribute") -> returns selected attribute
-                                Log.d("rampsMan", " " + d.getData().get("uploader") + " | " + d.getId()); //
-                                Toast.makeText(MainActivity.this, " " + d.getId(), Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(MainActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });*/
-
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

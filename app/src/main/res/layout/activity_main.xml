@@ -18,6 +18,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        style="@style/Widget.SGRamps.BottomNav"
         android:id="@+id/bottom_navigation_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -29,7 +30,8 @@
         app:menu="@menu/menu"
         app:itemTextAppearanceInactive="@style/bottomNavigation"
         app:itemTextAppearanceActive="@style/bottomNavigation.Active"
-        app:itemTextColor="@drawable/bottom_nav_color_selection">
+        app:itemTextColor="@drawable/bottom_nav_color_selection"
+        app:itemActiveIndicatorStyle="@style/Widget.SGRamps.BottomNav.Indicator">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
