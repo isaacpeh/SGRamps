@@ -1,9 +1,11 @@
 package com.example.sgramps;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,15 +17,20 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import com.example.sgramps.adapters.PlacesAutoSuggestAdapter;
 import com.example.sgramps.models.RampsDAO;
+import com.example.sgramps.models.RampsModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -40,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.List;
 
@@ -49,7 +57,9 @@ public class HomeFragment extends Fragment {
     private int btnToggle = 0;
     LocationRequest locationRequest;
     LocationCallback locationCallback;
-    FirebaseFirestore firebase;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,9 +89,23 @@ public class HomeFragment extends Fragment {
                 btnLocate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        createDialog();
                         FusedLocationProviderClient fusedLocationClient;
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                         getLocation(fusedLocationClient);
+                    }
+                });
+
+                // MAP CLICKED FUNCTION
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(@NonNull LatLng latLng) {
+                        // when clicked on map
+                        closeKeyboard();
+                        autoCompleteTextView.clearFocus();
+                        moveMap(latLng, true);
+                        generateCircle(latLng);
+                        getRamps(latLng);
                     }
                 });
 
@@ -97,21 +121,10 @@ public class HomeFragment extends Fragment {
                         if (latlng != null) {
                             Log.d("Lat Lng", " " + latlng.latitude + " " + latlng.longitude);
                             LatLng latLng = new LatLng(latlng.latitude, latlng.longitude);
-                            moveMap(latLng);
+                            moveMap(latLng, false);
                         } else {
                             Log.d("Lat Lng", "Lat Lng not found");
                         }
-                    }
-                });
-
-                // MAP CLICKED FUNCTION
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(@NonNull LatLng latLng) {
-                        // when clicked on map
-                        closeKeyboard();
-                        autoCompleteTextView.clearFocus();
-                        moveMap(latLng);
                     }
                 });
             }
@@ -121,8 +134,6 @@ public class HomeFragment extends Fragment {
 
     // get current location
     private void getLocation(FusedLocationProviderClient fusedLocationClient) {
-        RampsDAO dbRamps = new RampsDAO();
-
         if (btnToggle == 0) {
             btnToggle = 1;
             locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
@@ -139,18 +150,22 @@ public class HomeFragment extends Fragment {
                     } else {
                         for (Location location : locationResult.getLocations()) {
                             if (location != null) {
+                                LatLng latLng = null;
                                 Double lat = location.getLatitude();
                                 Double lng = location.getLongitude();
                                 Log.d("GPS", "Lat: " + lat + " | long: " + lng);
                                 fusedLocationClient.removeLocationUpdates(locationCallback);
-                                LatLng latLng = new LatLng(lat, lng);
-                                moveMap(latLng);
+                                latLng = new LatLng(lat, lng);
+                                moveMap(latLng, false);
                                 generateCircle(latLng);
+                                getRamps(latLng);
                             }
                         }
                     }
                 }
             };
+
+            //
 
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -166,6 +181,25 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // get ramps within location
+    private void getRamps(LatLng latLng) {
+        RampsDAO dbRamps = new RampsDAO();
+        dbRamps.getRamp(latLng, new RampsDAO.FirebaseCallback() {
+            @Override
+            public void onCallBack(List<RampsModel> ramps) {
+                for (RampsModel ramp : ramps
+                ) {
+                    GeoPoint gp = ramp.getGpoint();
+                    LatLng latlng = new LatLng(gp.getLatitude(), gp.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latlng);
+                    markerOptions.title(latlng.latitude + " : " + latlng.longitude);
+                    map.addMarker(markerOptions);
+                }
+            }
+        });
+    }
+
     // generate radius circle and pins within radius
     private void generateCircle(LatLng latlng) {
         Circle circle = map.addCircle(new CircleOptions()
@@ -175,20 +209,21 @@ public class HomeFragment extends Fragment {
                 .strokeColor(Color.argb(200, 4, 30, 224))
                 .strokeWidth(4));
 
-        // fetch all points
-        // compare all points latlng and current point latlng distance
-        // display pin if within radius
         // https://stackoverflow.com/questions/22063842/check-if-a-latitude-and-longitude-is-within-a-circle
         // https://developers.google.com/maps/documentation/javascript/examples/marker-accessibility
     }
 
     // generate pin and move map
-    private void moveMap(LatLng latlng) {
+    private void moveMap(LatLng latlng, boolean zoom) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
         markerOptions.title(latlng.latitude + " : " + latlng.longitude);
         map.clear();
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+        if (map.getCameraPosition().zoom > 15 && zoom) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, map.getCameraPosition().zoom));
+        } else {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+        }
         map.addMarker(markerOptions);
     }
 
@@ -220,5 +255,25 @@ public class HomeFragment extends Fragment {
             InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void createDialog() {
+        dialogBuilder = new AlertDialog.Builder(getActivity(), R.style.fullWidth_Dialog);
+        final View popupView = getLayoutInflater().inflate(R.layout.popup, null);
+        dialogBuilder.setView(popupView);
+        dialog = dialogBuilder.create();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.show();
+        /*WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        Point size = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+        layoutParams.width = size.y;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.BOTTOM;
+
+        //lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(layoutParams);*/
+
     }
 }

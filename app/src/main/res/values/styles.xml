@@ -18,4 +18,13 @@
         <item name="android:textColor">@color/primary_blue</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="fullWidth.Dialog" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

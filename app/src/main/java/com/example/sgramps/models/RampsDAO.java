@@ -1,5 +1,6 @@
 package com.example.sgramps.models;
 
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,16 +10,22 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RampsDAO {
     FirebaseFirestore db;
 
     public RampsDAO() {
+    }
+
+    public interface FirebaseCallback {
+        void onCallBack(List<RampsModel> ramps);
     }
 
     public void addRamp(RampsModel ramp) { // add callback or smth
@@ -44,7 +51,46 @@ public class RampsDAO {
                 });
     }
 
-    public void getRamp(LatLng latLng) {
-        
+    public void getRamp(LatLng latLng, FirebaseCallback callback) {
+        List<RampsModel> ramps = new ArrayList<RampsModel>();
+
+        db = FirebaseFirestore.getInstance();
+        db.collection("points").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list) {
+                                // getData() -> returns entire document
+                                // .getId() - > returns documentID
+                                // .getData().get("attribute") -> returns selected attribute
+                                GeoPoint gp = d.getGeoPoint("gpoint");
+                                LatLng pointLatlng = new LatLng(gp.getLatitude(), gp.getLongitude());
+                                float[] result = new float[1];
+                                Location.distanceBetween(latLng.latitude, latLng.longitude,
+                                        pointLatlng.latitude, pointLatlng.longitude, result);
+                                float distanceInMeters = result[0];
+                                boolean isWithin500m = (distanceInMeters <= 500);
+                                if (isWithin500m) {
+                                    String ramp_name = d.getId();
+                                    String ramp_description = d.getData().get("ramp_description").toString();
+                                    Timestamp created_at = (Timestamp) d.getData().get("created_at");
+                                    String uploader = d.getData().get("uploader").toString();
+                                    List<String> img_url = (List<String>) d.getData().get("img_url");
+                                    Boolean active = (Boolean) d.getData().get("active");
+                                    GeoPoint gpoint = d.getGeoPoint("gpoint");
+
+                                    RampsModel tempRamp = new RampsModel(ramp_name, ramp_description,
+                                            created_at, uploader, img_url, active, gpoint);
+                                    ramps.add(tempRamp);
+                                }
+                            }
+                            callback.onCallBack(ramps);
+                        } else {
+                            Log.d("LOG", "No ramps found within radius");
+                        }
+                    }
+                });
     }
 }
