@@ -34,5 +34,4 @@
     <style name="Widget.SGRamps.BottomNav" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/active_indicator_blue</item>
     </style>
-
 </resources>

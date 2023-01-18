@@ -31,7 +31,8 @@
         app:itemTextAppearanceInactive="@style/bottomNavigation"
         app:itemTextAppearanceActive="@style/bottomNavigation.Active"
         app:itemTextColor="@drawable/bottom_nav_color_selection"
-        app:itemActiveIndicatorStyle="@style/Widget.SGRamps.BottomNav.Indicator">
+        app:itemActiveIndicatorStyle="@style/Widget.SGRamps.BottomNav.Indicator"
+        app:itemRippleColor="@color/white">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

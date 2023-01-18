@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
                 btnLocate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        createDialog();
+                        //createDialog();
                         FusedLocationProviderClient fusedLocationClient;
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                         getLocation(fusedLocationClient);

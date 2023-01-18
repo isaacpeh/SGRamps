@@ -61,7 +61,10 @@
         app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.978" />
+        app:layout_constraintVertical_bias="0.978"
+        app:backgroundTint="@color/white"
+        app:tint="@color/black"
+        app:rippleColor="@color/active_indicator_blue" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
