@@ -40,13 +40,13 @@ public class RampsDAO {
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("FireStore: INSERT", "Successfully inserted ramp " + ramp.getRamp_name());
+                        Log.d("LOG", " FIRESTORE: Successfully inserted ramp " + ramp.getRamp_name());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("FireStore: INSERT", "Failed to insert ramp " + ramp.getRamp_name());
+                        Log.d("LOG", "FIRESTORE: Failed to insert ramp " + ramp.getRamp_name());
                     }
                 });
     }

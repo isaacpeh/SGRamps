@@ -16,4 +16,5 @@
     <color name="active_indicator_blue">#FFD1E4FF</color>
     <color name="black_overlay">#66000000</color>
     <color name="blue">#FF001AFF</color>
+    <color name="primary_red">#FF3131</color>
 </resources>

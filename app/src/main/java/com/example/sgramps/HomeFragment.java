@@ -1,6 +1,7 @@
 package com.example.sgramps;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -27,11 +28,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sgramps.adapters.PlacesAutoSuggestAdapter;
 import com.example.sgramps.models.RampsDAO;
 import com.example.sgramps.models.RampsModel;
+import com.example.sgramps.models.UserDAO;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -45,11 +49,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -82,6 +89,7 @@ public class HomeFragment extends Fragment {
 
         // async map
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("PotentialBehaviorOverride")
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
@@ -90,7 +98,6 @@ public class HomeFragment extends Fragment {
                 btnLocate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //createDialog();
                         FusedLocationProviderClient fusedLocationClient;
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                         getLocation(fusedLocationClient);
@@ -126,6 +133,17 @@ public class HomeFragment extends Fragment {
                         } else {
                             Log.d("Lat Lng", "Lat Lng not found");
                         }
+                    }
+                });
+
+                // MARKER CLICKED LISTENER
+                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(@NonNull Marker marker) {
+                        RampsModel markerRamp = (RampsModel) marker.getTag();
+                        Log.d("test", " " + markerRamp.getRamp_name());
+                        createDialog(markerRamp);
+                        return false;
                     }
                 });
             }
@@ -194,8 +212,8 @@ public class HomeFragment extends Fragment {
                     LatLng latlng = new LatLng(gp.getLatitude(), gp.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latlng);
-                    markerOptions.title(latlng.latitude + " : " + latlng.longitude);
-                    map.addMarker(markerOptions);
+                    Marker marker = map.addMarker(markerOptions);
+                    marker.setTag(ramp);
                 }
             }
         });
@@ -257,14 +275,58 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public void createDialog() {
+    // open popup view
+    public void createDialog(RampsModel selectedMarker) {
         BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         View bottomSheetView = getLayoutInflater().inflate(R.layout.popup, null);
         dialog.setContentView(bottomSheetView);
+
+        Button btnBookmark = (Button) dialog.findViewById(R.id.btnBookmark);
+        UserDAO userDb = new UserDAO();
+
+        // set attributes accordingly
+        TextView txtTitle = dialog.findViewById(R.id.txtTitle);
+        TextView txtDescription = dialog.findViewById(R.id.txtDescription);
+        Log.d("test", " " + txtTitle + " | " + txtDescription);
+        txtTitle.setText(selectedMarker.getRamp_name());
+        txtDescription.setText(selectedMarker.getRamp_description());
+
+        // fetch user bookmarks
+        userDb.getBookmark("isaac@gmail.com", new UserDAO.BookmarkCallback() {
+            @Override
+            public void onCallBack(List<String> bookmarks) {
+                Log.d("test", " " + bookmarks);
+                Log.d("test", " " + bookmarks.contains(selectedMarker.getRamp_name()));
+                if (bookmarks.contains(selectedMarker.getRamp_name())) {
+                    // bookmarked
+                    btnBookmark.setText("Remove");
+                    btnBookmark.setSelected(false);
+                    btnBookmark.setBackgroundColor(Color.rgb(255, 49, 49));
+                } else {
+                    // not bookmarked
+                    btnBookmark.setText("Bookmark");
+                    btnBookmark.setBackgroundColor(Color.rgb(27, 115, 232));
+                    btnBookmark.setSelected(true);
+                }
+            }
+        });
+
+        // bookmark button click function
+        btnBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnBookmark.isSelected()) {
+                    btnBookmark.setText("Remove");
+                    btnBookmark.setSelected(false);
+                    btnBookmark.setBackgroundColor(Color.rgb(255, 49, 49));
+                } else {
+                    btnBookmark.setText("Bookmark");
+                    btnBookmark.setSelected(true);
+                    btnBookmark.setBackgroundColor(Color.rgb(27, 115, 232));
+                }
+            }
+        });
+
         dialog.show();
-       /* View view = getLayoutInflater().inflate(R.layout.popup, null, false);
-        dialog.setContentView(view);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialog.show();*/
     }
 }

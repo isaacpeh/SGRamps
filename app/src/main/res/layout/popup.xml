@@ -8,11 +8,6 @@
     android:orientation="vertical"
     style="@style/Widget.SGRamps.BottomSheet">
 
-    <!--<com.google.android.material.bottomsheet.BottomSheetDragHandleView
-        android:id="@+id/drag_handle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +28,7 @@
             android:paddingTop="20dp">
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/imgIcon"
                 android:layout_width="69dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
@@ -41,14 +36,13 @@
                 app:srcCompat="@drawable/googleg_standard_color_18" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/txtTitle"
                 android:layout_width="255dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:paddingEnd="10dp"
-                android:text="Changi Airport Terminal 1 Taxi Stand "
-                android:textSize="22dp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -61,7 +55,7 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txtDescriptionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="25dp"
@@ -70,13 +64,12 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txtDescription"
             android:layout_width="match_parent"
             android:layout_height="95dp"
             android:paddingLeft="25dp"
             android:paddingTop="0dp"
             android:paddingRight="20dp"
-            android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
             android:textSize="16dp" />
 
         <LinearLayout
@@ -86,11 +79,9 @@
             android:orientation="vertical">
 
             <Button
-                style="@style/Widget.SGRamps.Button"
-                android:id="@+id/button4"
+                android:id="@+id/btnBookmark"
                 android:layout_width="356dp"
-                android:layout_height="54dp"
-                android:text="Bookmark" />
+                android:layout_height="54dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -100,6 +91,7 @@
         android:layout_height="48dp">
 
         <ImageButton
+            android:id="@+id/imgBtnReport"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
