@@ -12,6 +12,10 @@ public class RampsModel {
     GeoPoint gpoint;
     Timestamp created_at;
 
+    public RampsModel() {
+
+    }
+
     public RampsModel(String ramp_name, String ramp_description, Timestamp created_at, String uploader, List<String> img_url, boolean active, GeoPoint gpoint) {
         this.ramp_name = ramp_name;
         this.ramp_description = ramp_description;

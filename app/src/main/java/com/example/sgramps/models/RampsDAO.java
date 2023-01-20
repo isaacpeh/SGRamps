@@ -28,6 +28,10 @@ public class RampsDAO {
         void onCallBack(List<RampsModel> ramps);
     }
 
+    public interface SingleRampCallback {
+        void onCallBack(RampsModel ramp);
+    }
+
     public void addRamp(RampsModel ramp) { // add callback or smth
         db = FirebaseFirestore.getInstance();
         CollectionReference dbRamps = db.collection("points");
@@ -73,22 +77,29 @@ public class RampsDAO {
                                 float distanceInMeters = result[0];
                                 boolean isWithin500m = (distanceInMeters <= 500);
                                 if (isWithin500m) {
-                                    String ramp_name = d.getId();
-                                    String ramp_description = d.getData().get("ramp_description").toString();
-                                    Timestamp created_at = (Timestamp) d.getData().get("created_at");
-                                    String uploader = d.getData().get("uploader").toString();
-                                    List<String> img_url = (List<String>) d.getData().get("img_url");
-                                    Boolean active = (Boolean) d.getData().get("active");
-                                    GeoPoint gpoint = d.getGeoPoint("gpoint");
-
-                                    RampsModel tempRamp = new RampsModel(ramp_name, ramp_description,
-                                            created_at, uploader, img_url, active, gpoint);
+                                    RampsModel tempRamp = d.toObject(RampsModel.class);
                                     ramps.add(tempRamp);
                                 }
                             }
                             callback.onCallBack(ramps);
                         } else {
                             Log.d("LOG", "No ramps found within radius");
+                        }
+                    }
+                });
+    }
+
+    public void getRampByName(String ramp_name, SingleRampCallback callback) {
+        db = FirebaseFirestore.getInstance();
+        db.collection("points").document(ramp_name).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            RampsModel ramp = documentSnapshot.toObject(RampsModel.class);
+                            callback.onCallBack(ramp);
+                        } else {
+                            Log.d("LOG", ramp_name + " not found!");
                         }
                     }
                 });

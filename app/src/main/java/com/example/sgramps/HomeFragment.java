@@ -13,6 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.os.Looper;
 import android.util.Log;
@@ -24,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sgramps.adapters.PlacesAutoSuggestAdapter;
 import com.example.sgramps.models.RampsDAO;
@@ -116,14 +118,14 @@ public class HomeFragment extends Fragment {
                         closeKeyboard();
                         autoCompleteTextView.clearFocus();
 
-                        Log.d("Address", autoCompleteTextView.getText().toString());
+                        Log.d("LOG", "ADDRESS SELECTED: " + autoCompleteTextView.getText().toString());
                         LatLng latlng = getlatLng(autoCompleteTextView.getText().toString());
                         if (latlng != null) {
-                            Log.d("Lat Lng", " " + latlng.latitude + " " + latlng.longitude);
+                            Log.d("LOG", "LATITUDE: " + latlng.latitude + " - LONGITUDE: " + latlng.longitude);
                             LatLng latLng = new LatLng(latlng.latitude, latlng.longitude);
                             moveMap(latLng, false);
                         } else {
-                            Log.d("Lat Lng", "Lat Lng not found");
+                            Log.d("LOG", "Lat Lng not found");
                         }
                     }
                 });
@@ -134,7 +136,6 @@ public class HomeFragment extends Fragment {
                     public boolean onMarkerClick(Marker marker) {
                         try {
                             RampsModel markerRamp = (RampsModel) marker.getTag();
-                            Log.d("test", " " + markerRamp.getRamp_name());
                             createRampDialog(markerRamp);
                         } catch (NullPointerException e) {
                             LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
@@ -146,6 +147,20 @@ public class HomeFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            requireActivity().getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+                @Override
+                public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                    String result = bundle.getString("ramp");
+                    getRampByName(result);
+                }
+            });
+        }
     }
 
     // get current location
@@ -169,7 +184,7 @@ public class HomeFragment extends Fragment {
                                 LatLng latLng = null;
                                 Double lat = location.getLatitude();
                                 Double lng = location.getLongitude();
-                                Log.d("GPS", "Lat: " + lat + " | long: " + lng);
+                                Log.d("LOG", "USER LATITUDE: " + lat + " - USER LONGITUDE: " + lng);
                                 fusedLocationClient.removeLocationUpdates(locationCallback);
                                 latLng = new LatLng(lat, lng);
                                 moveMap(latLng, false);
@@ -281,8 +296,7 @@ public class HomeFragment extends Fragment {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("test", " " + latLng);
-                // pass to next page with latlng
+                // pass to create page with latlng
             }
         });
         dialog.show();
@@ -307,15 +321,14 @@ public class HomeFragment extends Fragment {
         userDb.getBookmark(email, new UserDAO.BookmarkCallback() {
             @Override
             public void onCallBack(List<String> bookmarks) {
-                Log.d("test", " " + bookmarks);
                 if (bookmarks.contains(selectedMarker.getRamp_name())) {
                     // bookmarked
-                    btnBookmark.setText("Remove");
+                    btnBookmark.setText("Remove from bookmarks");
                     btnBookmark.setSelected(false);
                     btnBookmark.setBackgroundColor(Color.rgb(255, 49, 49));
                 } else {
                     // not bookmarked
-                    btnBookmark.setText("Bookmark");
+                    btnBookmark.setText("Bookmark ramp");
                     btnBookmark.setBackgroundColor(Color.rgb(27, 115, 232));
                     btnBookmark.setSelected(true);
                 }
@@ -327,18 +340,41 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (btnBookmark.isSelected()) {
-                    btnBookmark.setText("Remove");
+                    btnBookmark.setText("Remove from bookmarks");
                     btnBookmark.setSelected(false);
                     btnBookmark.setBackgroundColor(Color.rgb(255, 49, 49));
                     userDb.setBookmark(email, selectedMarker.getRamp_name());
+                    Toast.makeText(getActivity(), "Added to bookmarks", Toast.LENGTH_SHORT).show();
                 } else {
-                    btnBookmark.setText("Bookmark");
+                    btnBookmark.setText("Bookmark ramp");
                     btnBookmark.setSelected(true);
                     btnBookmark.setBackgroundColor(Color.rgb(27, 115, 232));
                     userDb.deleteBookmark(email, selectedMarker.getRamp_name());
+                    Toast.makeText(getActivity(), "Removed from bookmarks", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         dialog.show();
+    }
+
+    // move map according to bookmarks callback
+    public void getRampByName(String ramp_name) {
+        RampsDAO dbRamps = new RampsDAO();
+        dbRamps.getRampByName(ramp_name, new RampsDAO.SingleRampCallback() {
+            @Override
+            public void onCallBack(RampsModel result) {
+                RampsModel ramp = result;
+
+                LatLng latLng = new LatLng(result.getGpoint().getLatitude(), result.getGpoint().getLongitude());
+                map.clear();
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                Marker marker = map.addMarker(markerOptions);
+                marker.setTag(ramp);
+                createRampDialog(ramp);
+            }
+        });
     }
 }

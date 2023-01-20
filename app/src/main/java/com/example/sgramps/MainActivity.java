@@ -5,31 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.sgramps.models.RampsModel;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseFirestore db;
-    private ArrayList<RampsModel> rampsArrayList;
-    Fragment fragmentHome = new HomeFragment();
-    Fragment fragmentBookmark = new BookmarksFragment();
-    ;
+    public static Fragment fragmentHome = new HomeFragment();
+    public static Fragment fragmentBookmark = new BookmarksFragment();
     FragmentManager fm = getSupportFragmentManager();
-    Fragment active;
+    public static Fragment active;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +25,15 @@ public class MainActivity extends AppCompatActivity {
         NavigationBarView bottomNav = findViewById(R.id.bottom_navigation_view);
 
         active = fragmentHome;
-        fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1").commit();
-        fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").hide(fragmentHome).commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1").hide(fragmentBookmark).commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").commit();
+
         /*Fragment fragment = new HomeFragment();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();*/
+
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
