@@ -2,12 +2,9 @@ package com.example.sgramps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,18 +16,14 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sgramps.adapters.PlacesAutoSuggestAdapter;
 import com.example.sgramps.models.RampsDAO;
@@ -53,10 +46,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -66,12 +56,14 @@ public class HomeFragment extends Fragment {
     private int btnToggle = 0;
     LocationRequest locationRequest;
     LocationCallback locationCallback;
-    BottomSheetDialog dialog;
-
+    String email;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // logged in user
+        email = "isaac@gmail.com";
 
         // initialize view
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -139,10 +131,15 @@ public class HomeFragment extends Fragment {
                 // MARKER CLICKED LISTENER
                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
-                    public boolean onMarkerClick(@NonNull Marker marker) {
-                        RampsModel markerRamp = (RampsModel) marker.getTag();
-                        Log.d("test", " " + markerRamp.getRamp_name());
-                        createDialog(markerRamp);
+                    public boolean onMarkerClick(Marker marker) {
+                        try {
+                            RampsModel markerRamp = (RampsModel) marker.getTag();
+                            Log.d("test", " " + markerRamp.getRamp_name());
+                            createRampDialog(markerRamp);
+                        } catch (NullPointerException e) {
+                            LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                            createDialog(latLng);
+                        }
                         return false;
                     }
                 });
@@ -219,7 +216,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // generate radius circle and pins within radius
+    // generate radius circle
     private void generateCircle(LatLng latlng) {
         Circle circle = map.addCircle(new CircleOptions()
                 .center(latlng)
@@ -227,15 +224,13 @@ public class HomeFragment extends Fragment {
                 .fillColor(Color.argb(30, 28, 130, 255))
                 .strokeColor(Color.argb(200, 4, 30, 224))
                 .strokeWidth(4));
-
-        // https://developers.google.com/maps/documentation/javascript/examples/marker-accessibility
     }
 
     // generate pin and move map
     private void moveMap(LatLng latlng, boolean zoom) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
-        markerOptions.title(latlng.latitude + " : " + latlng.longitude);
+
         map.clear();
         if (map.getCameraPosition().zoom > 15 && zoom) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, map.getCameraPosition().zoom));
@@ -275,8 +270,26 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    // open popup view
-    public void createDialog(RampsModel selectedMarker) {
+    // open create popup view
+    public void createDialog(LatLng latLng) {
+        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.create_popup, null);
+        dialog.setContentView(bottomSheetView);
+
+        Button btnCreate = (Button) dialog.findViewById(R.id.btnCreate);
+
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("test", " " + latLng);
+                // pass to next page with latlng
+            }
+        });
+        dialog.show();
+    }
+
+    // open ramp popup view
+    public void createRampDialog(RampsModel selectedMarker) {
         BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         View bottomSheetView = getLayoutInflater().inflate(R.layout.popup, null);
         dialog.setContentView(bottomSheetView);
@@ -287,16 +300,14 @@ public class HomeFragment extends Fragment {
         // set attributes accordingly
         TextView txtTitle = dialog.findViewById(R.id.txtTitle);
         TextView txtDescription = dialog.findViewById(R.id.txtDescription);
-        Log.d("test", " " + txtTitle + " | " + txtDescription);
         txtTitle.setText(selectedMarker.getRamp_name());
         txtDescription.setText(selectedMarker.getRamp_description());
 
         // fetch user bookmarks
-        userDb.getBookmark("isaac@gmail.com", new UserDAO.BookmarkCallback() {
+        userDb.getBookmark(email, new UserDAO.BookmarkCallback() {
             @Override
             public void onCallBack(List<String> bookmarks) {
                 Log.d("test", " " + bookmarks);
-                Log.d("test", " " + bookmarks.contains(selectedMarker.getRamp_name()));
                 if (bookmarks.contains(selectedMarker.getRamp_name())) {
                     // bookmarked
                     btnBookmark.setText("Remove");
@@ -319,14 +330,15 @@ public class HomeFragment extends Fragment {
                     btnBookmark.setText("Remove");
                     btnBookmark.setSelected(false);
                     btnBookmark.setBackgroundColor(Color.rgb(255, 49, 49));
+                    userDb.setBookmark(email, selectedMarker.getRamp_name());
                 } else {
                     btnBookmark.setText("Bookmark");
                     btnBookmark.setSelected(true);
                     btnBookmark.setBackgroundColor(Color.rgb(27, 115, 232));
+                    userDb.deleteBookmark(email, selectedMarker.getRamp_name());
                 }
             }
         });
-
         dialog.show();
     }
 }

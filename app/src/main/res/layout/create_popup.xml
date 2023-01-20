@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    style="@style/Widget.SGRamps.BottomSheet">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="40dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/imgContribute"
+            android:layout_width="180dp"
+            android:layout_height="123dp"
+            app:srcCompat="@drawable/contribute_icon" />
+
+        <TextView
+            android:id="@+id/txtCreateTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create ramp"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:padding="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create a ramp at selected point. Your contribution will greatly help others!"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="40dp" />
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:backgroundTint="#FF1A73E8" />
+    </LinearLayout>
+
+
+</RelativeLayout>

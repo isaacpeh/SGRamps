@@ -20,7 +20,7 @@
     </style>
 
     <style name="Widget.SGRamps.BottomSheet" parent="Widget.Material3.BottomSheet">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@drawable/rounded_dialog</item>
     </style>
 
     <style name="Widget.SGRamps.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
@@ -29,5 +29,10 @@
 
     <style name="Widget.SGRamps.BottomNav" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/active_indicator_blue</item>
+    </style>
+
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
     </style>
 </resources>

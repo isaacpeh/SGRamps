@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
@@ -67,7 +69,17 @@ public class UserDAO {
                 });
     }
 
-    public void deleteBookmark(String ramp) {
+    public void deleteBookmark(String email, String ramp_name) {
+        db = FirebaseFirestore.getInstance();
+        DocumentReference bookmarks = db.collection("bookmarks").document(email);
+        Log.d("test", "removing " + ramp_name + " for " + email);
+        bookmarks.update("ramps", FieldValue.arrayRemove(ramp_name));
+    }
 
+    public void setBookmark(String email, String ramp_name) {
+        db = FirebaseFirestore.getInstance();
+        DocumentReference bookmarks = db.collection("bookmarks").document(email);
+        Log.d("test", "adding " + ramp_name + " for " + email);
+        bookmarks.update("ramps", FieldValue.arrayUnion(ramp_name));
     }
 }
