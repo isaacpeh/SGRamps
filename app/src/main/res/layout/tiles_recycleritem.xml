@@ -11,7 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?attr/materialCardViewElevatedStyle"
-        app:cardElevation="2dp"
+        android:outlineSpotShadowColor="#4F000000"
+        app:cardElevation="3dp"
         android:layout_marginBottom="3dp"
         app:cardBackgroundColor="@color/white"
         app:contentPadding="8dp">

@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
     public static Fragment fragmentHome = new HomeFragment();
     public static Fragment fragmentBookmark = new BookmarksFragment();
+    public static Fragment fragmentProfile = new ProfileFragment();
     FragmentManager fm = getSupportFragmentManager();
     public static Fragment active;
 
@@ -25,8 +26,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationBarView bottomNav = findViewById(R.id.bottom_navigation_view);
 
         active = fragmentHome;
-        fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1").hide(fragmentBookmark).commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1").hide(fragmentBookmark).hide(fragmentProfile).commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentProfile, "5").commit();
 
         /*Fragment fragment = new HomeFragment();
         getSupportFragmentManager()
@@ -55,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.profile_page:
-
+                        fm.beginTransaction().hide(active).show(fragmentProfile).commit();
+                        active = fragmentProfile;
                         return true;
                     default:
                         return false;

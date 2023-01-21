@@ -5,11 +5,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 
 import java.sql.Array;
@@ -27,9 +29,9 @@ public class UserDAO {
     public UserDAO() {
     }
 
-    /*public interface FirebaseCallback {
-        void onCallBack(List<UserModel> user);
-    }*/
+    public interface UserCallback {
+        void onCallBack(UserModel user);
+    }
 
     public interface BookmarkCallback {
         void onCallBack(List<String> bookmarks);
@@ -81,5 +83,21 @@ public class UserDAO {
         DocumentReference bookmarks = db.collection("bookmarks").document(email);
         Log.d("test", "adding " + ramp_name + " for " + email);
         bookmarks.update("ramps", FieldValue.arrayUnion(ramp_name));
+    }
+
+    public void getUser(String email, UserCallback callback) {
+        db = FirebaseFirestore.getInstance();
+        db.collection("user").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            UserModel user = documentSnapshot.toObject(UserModel.class);
+                            callback.onCallBack(user);
+                        } else {
+                            Log.d("LOG", "User: " + email + " not found!");
+                        }
+                    }
+                });
     }
 }

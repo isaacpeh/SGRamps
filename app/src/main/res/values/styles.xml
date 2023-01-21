@@ -35,4 +35,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
+
+    <style name="profileImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">200dp</item>
+    </style>
 </resources>
