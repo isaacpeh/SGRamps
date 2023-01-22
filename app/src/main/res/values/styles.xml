@@ -40,4 +40,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">200dp</item>
     </style>
+
+    <style name="Widget.SGRamps.DDL" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="android:popupElevation">4dp</item>
+    </style>
 </resources>
