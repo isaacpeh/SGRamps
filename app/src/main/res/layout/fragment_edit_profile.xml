@@ -38,11 +38,10 @@
                 app:cardCornerRadius="100dp">
 
                 <ImageView
-                    android:id="@+id/imgProfilePic"
+                    android:id="@+id/imgProfilePic2"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/ramp" />
+                    android:scaleType="centerCrop" />
 
             </androidx.cardview.widget.CardView>
 
@@ -52,7 +51,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:gravity="center"
-                android:text="Richard Williams"
                 android:textColor="@color/secondary_blue"
                 android:textSize="22dp"
                 android:textStyle="bold" />
@@ -62,7 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="richard.will@gmail.com"
                 android:textColor="#6A6A6A" />
 
             <androidx.cardview.widget.CardView
@@ -102,10 +99,12 @@
                             app:boxStrokeWidthFocused="0dp">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
                                 android:textAlignment="textEnd"
+                                android:inputType="textNoSuggestions"
                                 android:textColor="#6A6A6A" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -144,10 +143,12 @@
                             app:boxStrokeWidthFocused="0dp">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
                                 android:textAlignment="textEnd"
+                                android:inputType="textNoSuggestions"
                                 android:textColor="#6A6A6A" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -173,18 +174,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="25dp"
-
                             android:layout_weight="1"
                             android:text="Date of birth:"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/editDob"
                             android:layout_width="215dp"
                             android:layout_height="54dp"
                             android:layout_marginRight="30dp"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
-                            android:text="13.01.1998"
                             android:textAlignment="textEnd"
                             android:textColor="#6A6A6A"
                             android:textSize="16dp" />
@@ -270,6 +270,7 @@
                             app:endIconTint="@color/black_overlay">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editPassword"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="textPassword"

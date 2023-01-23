@@ -30,8 +30,7 @@
                 android:id="@+id/imgProfilePic"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/ramp" />
+                android:scaleType="centerCrop" />
 
         </androidx.cardview.widget.CardView>
 
@@ -41,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:gravity="center"
-            android:text="Richard Williams"
             android:textColor="@color/secondary_blue"
             android:textSize="22dp"
             android:textStyle="bold" />
@@ -51,7 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="richard.will@gmail.com"
             android:textColor="#6A6A6A" />
 
         <androidx.cardview.widget.CardView

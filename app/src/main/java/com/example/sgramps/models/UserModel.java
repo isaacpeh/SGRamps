@@ -1,15 +1,30 @@
 package com.example.sgramps.models;
 
-public class UserModel {
-    String email, password, img_url, gender, dob, name;
+import com.google.firebase.firestore.auth.User;
 
-    public UserModel(String name, String email, String password, String img_url, String gender, String dob) {
+public class UserModel {
+    String email, password, img_url, gender, dob, name, number;
+
+    public UserModel() {
+
+    }
+
+    public UserModel(String name, String email, String password, String img_url, String gender, String dob, String number) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.img_url = img_url;
         this.gender = gender;
         this.dob = dob;
+        this.number = number;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getName() {
