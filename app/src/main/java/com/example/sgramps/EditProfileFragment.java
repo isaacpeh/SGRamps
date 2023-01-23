@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.constraintlayout.widget.Constraints;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -13,17 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sgramps.models.UserDAO;
 import com.example.sgramps.models.UserModel;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.common.primitives.Chars;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class EditProfileFragment extends Fragment {
@@ -34,6 +41,7 @@ public class EditProfileFragment extends Fragment {
     ImageView imgProfile;
     String email;
     TextInputEditText editEmail, editName, editPassword;
+    Button btnSave;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +56,7 @@ public class EditProfileFragment extends Fragment {
         editName = view.findViewById(R.id.editName);
         editPassword = view.findViewById(R.id.editPassword);
         editDob = view.findViewById(R.id.editDob);
+        btnSave = view.findViewById(R.id.btnSave);
 
         email = "isaac@gmail.com";
         getUser(email);
@@ -86,6 +95,13 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveProfile();
+            }
+        });
+
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         return view;
     }
@@ -113,9 +129,17 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        long upTo = calendar.getTimeInMillis();
+
+        CalendarConstraints.Builder constraints = new CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointBackward.before(upTo))
+                .setEnd(upTo);
+
         MaterialDatePicker<Long> datePicker = MaterialDatePicker
                 .Builder
                 .datePicker()
+                .setCalendarConstraints(constraints.build())
                 .setTitleText("Select date of birth")
                 .build();
 
@@ -129,5 +153,13 @@ public class EditProfileFragment extends Fragment {
                 editDob.setText(sdf.format(selection));
             }
         });
+    }
+
+    public void saveProfile() {
+        CharSequence name = editName.getText();
+        CharSequence dob = editDob.getText();
+        CharSequence gender = autoCompleteTextView.getText();
+        CharSequence password = editPassword.getText();
+        Log.d("test", " " + name + dob + gender + password + email);
     }
 }
