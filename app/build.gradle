@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace 'com.example.sgramps'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.sgramps"
@@ -46,5 +46,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.squareup.picasso:picasso:2.8'
-    //implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'androidx.activity:activity:1.6.1'
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-storage'
 }

@@ -1,10 +1,13 @@
 package com.example.sgramps.models;
 
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -12,19 +15,24 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
-import com.google.gson.Gson;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.sql.Array;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDAO {
     FirebaseFirestore db;
+    FirebaseStorage storage;
 
     public UserDAO() {
     }
@@ -37,6 +45,7 @@ public class UserDAO {
         void onCallBack(List<String> bookmarks);
     }
 
+    // USER BOOKMARKS
     public void getBookmark(String email, BookmarkCallback callback) {
         db = FirebaseFirestore.getInstance();
         db.collection("bookmarks").document(email).get()
@@ -85,6 +94,7 @@ public class UserDAO {
         bookmarks.update("ramps", FieldValue.arrayUnion(ramp_name));
     }
 
+    // USER DETAILS
     public void getUser(String email, UserCallback callback) {
         db = FirebaseFirestore.getInstance();
         db.collection("user").document(email).get()
@@ -99,5 +109,49 @@ public class UserDAO {
                         }
                     }
                 });
+    }
+
+    public void uploadImage(UserModel user) {
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference("profileImages/" + user.getEmail());
+        Log.d("test", "" + user.getImg_url());
+        // TODO: continue with checking on no url change.
+
+        if (user.getImg_url().equals("default")) {
+            Uri file = Uri.parse(user.getImg_url());
+            Log.d("test", "" + file);
+            StorageReference uploadRef = storageReference.child(file.getLastPathSegment());
+            Task<UploadTask.TaskSnapshot> uploadTask = uploadRef.putFile(file);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // get image url
+                    uploadRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // perform user update
+                            user.setImg_url(uri.toString());
+                            updateUser(user);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+        } else {
+            updateUser(user);
+        }
+    }
+
+    public void updateUser(UserModel user) {
+
+        db = FirebaseFirestore.getInstance();
+        // check if got new password or not.
+        //
+        /*db.collection("user").document(user.getEmail())
+                .update("")*/
     }
 }

@@ -1,10 +1,12 @@
 package com.example.sgramps;
 
-import android.app.DatePickerDialog;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.constraintlayout.widget.Constraints;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -15,18 +17,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sgramps.models.UserDAO;
 import com.example.sgramps.models.UserModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
-import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.common.primitives.Chars;
+import com.google.firebase.firestore.auth.User;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -40,8 +43,10 @@ public class EditProfileFragment extends Fragment {
     TextView txtEmail, txtName, editDob;
     ImageView imgProfile;
     String email;
-    TextInputEditText editEmail, editName, editPassword;
+    TextInputEditText editNumber, editName, editPassword, editNewPassword;
     Button btnSave;
+    ImageButton btnProfile;
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,11 +57,13 @@ public class EditProfileFragment extends Fragment {
         txtEmail = view.findViewById(R.id.txtEmail2);
         txtName = view.findViewById(R.id.txtName2);
         imgProfile = view.findViewById(R.id.imgProfilePic2);
-        editEmail = view.findViewById(R.id.editEmail);
+        editNumber = view.findViewById(R.id.editNumber);
         editName = view.findViewById(R.id.editName);
         editPassword = view.findViewById(R.id.editPassword);
+        editNewPassword = view.findViewById(R.id.editNewPassword);
         editDob = view.findViewById(R.id.editDob);
         btnSave = view.findViewById(R.id.btnSave);
+        btnProfile = view.findViewById(R.id.imgBtnProfile);
 
         email = "isaac@gmail.com";
         getUser(email);
@@ -78,6 +85,19 @@ public class EditProfileFragment extends Fragment {
                 }
             }
         };
+
+        pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                        imgProfile.setImageURI(uri);
+                        imgProfile.setTag(uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
 
         autoCompleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +122,13 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooserDialog();
+            }
+        });
+
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         return view;
     }
@@ -114,7 +141,8 @@ public class EditProfileFragment extends Fragment {
                 txtName.setText(user.getName());
                 txtEmail.setText(user.getEmail());
                 Picasso.get().load(user.getImg_url()).into(imgProfile);
-                editEmail.setText(user.getEmail());
+                imgProfile.setTag(user.getImg_url());
+                editNumber.setText(user.getNumber());
                 editName.setText(user.getName());
                 editPassword.setText(user.getPassword());
                 editDob.setText(user.getDob().replace("/", "."));
@@ -156,10 +184,45 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void saveProfile() {
-        CharSequence name = editName.getText();
-        CharSequence dob = editDob.getText();
-        CharSequence gender = autoCompleteTextView.getText();
-        CharSequence password = editPassword.getText();
-        Log.d("test", " " + name + dob + gender + password + email);
+        // check pw
+        // check if need update pw
+        // check if need change pic
+        String name = editName.getText().toString();
+        String number = editNumber.getText().toString();
+        String dob = editDob.getText().toString();
+        String gender = autoCompleteTextView.getText().toString();
+        String new_password = editNewPassword.getText().toString();
+        String imgUri = imgProfile.getTag().toString();
+        UserModel user;
+
+        if (new_password.trim().length() == 0) {
+            user = new UserModel(name, email, imgUri, gender, dob, number);
+            UserDAO userDb = new UserDAO();
+            userDb.uploadImage(user);
+        } else {
+            user = new UserModel(name, email, new_password, imgUri, gender, dob, number);
+        }
+
+
+        // perform update?
+    }
+
+    public void showChooserDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.cameragallery_popup, null);
+        dialog.setContentView(bottomSheetView);
+
+        TextView txtLibrary = dialog.findViewById(R.id.txtLibrary);
+        txtLibrary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        // Error but works
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

@@ -19,6 +19,15 @@ public class UserModel {
         this.number = number;
     }
 
+    public UserModel(String name, String email, String img_url, String gender, String dob, String number) {
+        this.name = name;
+        this.email = email;
+        this.img_url = img_url;
+        this.gender = gender;
+        this.dob = dob;
+        this.number = number;
+    }
+
     public String getNumber() {
         return number;
     }
