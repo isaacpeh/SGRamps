@@ -77,8 +77,9 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 if (MainActivity.active == MainActivity.fragmentEdit) {
+                    getParentFragmentManager().beginTransaction().detach(MainActivity.fragmentProfile).commit();
+                    getParentFragmentManager().beginTransaction().attach(MainActivity.fragmentProfile).commit();
                     getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentProfile).commit();
-                    getParentFragmentManager().beginTransaction().detach(MainActivity.fragmentEdit).commit();
                     MainActivity.active = MainActivity.fragmentProfile;
                 } else {
                     requireActivity().finish();
@@ -197,14 +198,12 @@ public class EditProfileFragment extends Fragment {
 
         if (new_password.trim().length() == 0) {
             user = new UserModel(name, email, imgUri, gender, dob, number);
-            UserDAO userDb = new UserDAO();
-            userDb.uploadImage(user);
         } else {
             user = new UserModel(name, email, new_password, imgUri, gender, dob, number);
         }
 
-
-        // perform update?
+        UserDAO userDb = new UserDAO();
+        userDb.uploadImage(user);
     }
 
     public void showChooserDialog() {

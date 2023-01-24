@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.profile_page:
+                        fm.beginTransaction().detach(fragmentProfile).commit();
+                        fm.beginTransaction().attach(fragmentProfile).commit();
                         fm.beginTransaction().hide(active).show(fragmentProfile).commit();
                         active = fragmentProfile;
 

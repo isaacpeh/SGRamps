@@ -83,14 +83,12 @@ public class UserDAO {
     public void deleteBookmark(String email, String ramp_name) {
         db = FirebaseFirestore.getInstance();
         DocumentReference bookmarks = db.collection("bookmarks").document(email);
-        Log.d("test", "removing " + ramp_name + " for " + email);
         bookmarks.update("ramps", FieldValue.arrayRemove(ramp_name));
     }
 
     public void setBookmark(String email, String ramp_name) {
         db = FirebaseFirestore.getInstance();
         DocumentReference bookmarks = db.collection("bookmarks").document(email);
-        Log.d("test", "adding " + ramp_name + " for " + email);
         bookmarks.update("ramps", FieldValue.arrayUnion(ramp_name));
     }
 
@@ -115,12 +113,9 @@ public class UserDAO {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference("profileImages/" + user.getEmail());
-        Log.d("test", "" + user.getImg_url());
-        // TODO: continue with checking on no url change.
 
-        if (user.getImg_url().equals("default")) {
+        if (!user.getImg_url().contains("firebasestorage")) {
             Uri file = Uri.parse(user.getImg_url());
-            Log.d("test", "" + file);
             StorageReference uploadRef = storageReference.child(file.getLastPathSegment());
             Task<UploadTask.TaskSnapshot> uploadTask = uploadRef.putFile(file);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -147,11 +142,48 @@ public class UserDAO {
     }
 
     public void updateUser(UserModel user) {
-
         db = FirebaseFirestore.getInstance();
-        // check if got new password or not.
-        //
-        /*db.collection("user").document(user.getEmail())
-                .update("")*/
+        if (user.getPassword() == null) {
+
+            db.collection("user").document(user.getEmail())
+                    .update("name", user.getName(),
+                            "number", user.getNumber(),
+                            "dob", user.getDob(),
+                            "gender", user.getGender(),
+                            "img_url", user.getImg_url())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        } else {
+            db.collection("user").document(user.getEmail())
+                    .update("name", user.getName(),
+                            "number", user.getNumber(),
+                            "dob", user.getDob(),
+                            "gender", user.getGender(),
+                            "img_url", user.getImg_url(),
+                            "password", user.getPassword())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+            ;
+        }
+
+
     }
 }
