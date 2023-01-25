@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sgramps.models.UserDAO;
 import com.example.sgramps.models.UserModel;
@@ -100,6 +101,7 @@ public class EditProfileFragment extends Fragment {
                     }
                 });
 
+        // gender drop down
         autoCompleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,6 +111,7 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        // dob calender
         editDob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +119,7 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        // save button
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +127,7 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        // profile image button
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +150,6 @@ public class EditProfileFragment extends Fragment {
                 imgProfile.setTag(user.getImg_url());
                 editNumber.setText(user.getNumber());
                 editName.setText(user.getName());
-                editPassword.setText(user.getPassword());
                 editDob.setText(user.getDob().replace("/", "."));
                 if (user.getGender().equalsIgnoreCase("Male")) {
                     autoCompleteTextView.setText(gender[0], false);
@@ -185,9 +189,9 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void saveProfile() {
-        // check pw
-        // check if need update pw
-        // check if need change pic
+        // Reauthenticate user
+        // https://firebase.google.com/docs/auth/android/manage-users#re-authenticate_a_user
+
         String name = editName.getText().toString();
         String number = editNumber.getText().toString();
         String dob = editDob.getText().toString();
@@ -204,6 +208,8 @@ public class EditProfileFragment extends Fragment {
 
         UserDAO userDb = new UserDAO();
         userDb.uploadImage(user);
+        Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
+        editPassword.setText("");
     }
 
     public void showChooserDialog() {

@@ -28,8 +28,8 @@
                 app:shapeAppearanceOverlay="@style/roundedImageView"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/ramp" />
+                android:scaleType="centerCrop" />
+
 
             <TextView
                 android:id="@+id/txtTileTitle"

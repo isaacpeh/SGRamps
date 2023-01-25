@@ -50,14 +50,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.GeoPoint;
 
+import org.checkerframework.checker.units.qual.C;
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private GoogleMap map;
-    private int btnToggle = 0;
     LocationRequest locationRequest;
     LocationCallback locationCallback;
+    FloatingActionButton btnLocate;
     String email;
 
     @Override
@@ -79,7 +84,7 @@ public class HomeFragment extends Fragment {
         autoCompleteTextView.setAdapter(new PlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
 
         // initialize current location
-        FloatingActionButton btnLocate = view.findViewById(R.id.btnLocation);
+        btnLocate = view.findViewById(R.id.btnLocation);
 
         // async map
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -92,6 +97,7 @@ public class HomeFragment extends Fragment {
                 btnLocate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        btnLocate.setEnabled(false);
                         FusedLocationProviderClient fusedLocationClient;
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                         getLocation(fusedLocationClient);
@@ -165,50 +171,47 @@ public class HomeFragment extends Fragment {
 
     // get current location
     private void getLocation(FusedLocationProviderClient fusedLocationClient) {
-        if (btnToggle == 0) {
-            btnToggle = 1;
-            locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
-                    .setWaitForAccurateLocation(true)
-                    .setMinUpdateIntervalMillis(3000)
-                    .setMaxUpdateDelayMillis(100)
-                    .build();
+        Toast.makeText(getActivity(), "Getting location...", Toast.LENGTH_SHORT).show();
+        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
+                .setWaitForAccurateLocation(true)
+                .setMinUpdateIntervalMillis(3000)
+                .setMaxUpdateDelayMillis(100)
+                .build();
 
-            locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    if (locationResult == null) {
-                        return;
-                    } else {
-                        for (Location location : locationResult.getLocations()) {
-                            if (location != null) {
-                                LatLng latLng = null;
-                                Double lat = location.getLatitude();
-                                Double lng = location.getLongitude();
-                                Log.d("LOG", "USER LATITUDE: " + lat + " - USER LONGITUDE: " + lng);
-                                fusedLocationClient.removeLocationUpdates(locationCallback);
-                                latLng = new LatLng(lat, lng);
-                                moveMap(latLng, false);
-                                generateCircle(latLng);
-                                getRamps(latLng);
-                            }
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if (locationResult == null) {
+                    btnLocate.setEnabled(true);
+                    return;
+                } else {
+                    for (Location location : locationResult.getLocations()) {
+                        if (location != null) {
+                            LatLng latLng = null;
+                            Double lat = location.getLatitude();
+                            Double lng = location.getLongitude();
+                            Log.d("LOG", "USER LATITUDE: " + lat + " - USER LONGITUDE: " + lng);
+                            fusedLocationClient.removeLocationUpdates(locationCallback);
+                            latLng = new LatLng(lat, lng);
+                            moveMap(latLng, false);
+                            generateCircle(latLng);
+                            getRamps(latLng);
                         }
                     }
+                    btnLocate.setEnabled(true);
                 }
-            };
-
-            //
-
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
-            } else {
-                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
             }
-        } else if (btnToggle == 1) {
-            btnToggle = 0;
-            Log.d("GPS", "TODO: Change button icon to X to remove currently selected location");
+        };
+
+        //
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+        } else {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
     }
 
@@ -314,8 +317,16 @@ public class HomeFragment extends Fragment {
         // set attributes accordingly
         TextView txtTitle = dialog.findViewById(R.id.txtTitle);
         TextView txtDescription = dialog.findViewById(R.id.txtDescription);
+        ImageCarousel carousel = dialog.findViewById(R.id.carousel);
         txtTitle.setText(selectedMarker.getRamp_name());
         txtDescription.setText(selectedMarker.getRamp_description());
+        carousel.registerLifecycle(getViewLifecycleOwner());
+        List<CarouselItem> list = new ArrayList<>();
+        for (String url : selectedMarker.getImg_url()
+        ) {
+            list.add(new CarouselItem(url));
+        }
+        carousel.setData(list);
 
         // fetch user bookmarks
         userDb.getBookmark(email, new UserDAO.BookmarkCallback() {

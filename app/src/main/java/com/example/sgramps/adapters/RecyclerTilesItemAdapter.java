@@ -1,6 +1,7 @@
 package com.example.sgramps.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sgramps.R;
+import com.example.sgramps.models.RampsDAO;
+import com.example.sgramps.models.RampsModel;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Picasso;
+
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 
 import java.util.List;
 
@@ -36,6 +43,14 @@ public class RecyclerTilesItemAdapter extends RecyclerView.Adapter<RecyclerTiles
     public void onBindViewHolder(ViewHolder holder, int position) {
         String bookmarkRamp = mBookmarks.get(position);
         holder.myTextView.setText(bookmarkRamp);
+        
+        RampsDAO dbRamps = new RampsDAO();
+        dbRamps.getRampByName(bookmarkRamp, new RampsDAO.SingleRampCallback() {
+            @Override
+            public void onCallBack(RampsModel ramp) {
+                Picasso.get().load(ramp.getImg_url().get(0)).into(holder.myImageView);
+            }
+        });
     }
 
     // total number of rows
@@ -44,14 +59,15 @@ public class RecyclerTilesItemAdapter extends RecyclerView.Adapter<RecyclerTiles
         return mBookmarks.size();
     }
 
-
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
+        ShapeableImageView myImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.txtTileTitle);
+            myImageView = itemView.findViewById(R.id.txtTileImg);
             itemView.setOnClickListener(this);
         }
 

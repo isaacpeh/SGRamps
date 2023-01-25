@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     public static Fragment fragmentBookmark = new BookmarksFragment();
     public static Fragment fragmentProfile = new ProfileFragment();
     public static Fragment fragmentEdit = new EditProfileFragment();
+    public static Fragment fragmentContribution = new BookmarksFragment();
+
     FragmentManager fm = getSupportFragmentManager();
     public static Fragment active;
 
@@ -31,11 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 .hide(fragmentBookmark)
                 .hide(fragmentProfile)
                 .hide(fragmentEdit)
+                .hide(fragmentContribution)
                 .commit();
 
         fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentProfile, "5").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentEdit, "6").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentContribution, "6").commit();
 
         /*Fragment fragment = new HomeFragment();
         getSupportFragmentManager()
@@ -68,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
                         fm.beginTransaction().attach(fragmentProfile).commit();
                         fm.beginTransaction().hide(active).show(fragmentProfile).commit();
                         active = fragmentProfile;
-
-                        /*fm.beginTransaction().hide(active).show(fragmentEdit).commit();
-                        active = fragmentEdit;*/
                         return true;
                     default:
                         return false;

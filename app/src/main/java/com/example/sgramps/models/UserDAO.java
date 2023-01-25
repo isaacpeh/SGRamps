@@ -14,6 +14,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -54,9 +56,7 @@ public class UserDAO {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            Log.d("LOG", "FIRESTORE: Fetching bookmarks for user - " + email);
                             if (document.exists()) {
-                                // do stuff here
                                 List<String> strings = document.getData().values().stream()
                                         .map(object -> Objects.toString(object, null))
                                         .collect(Collectors.toList());
@@ -67,6 +67,7 @@ public class UserDAO {
                                     tempRamp = tempRamp.replace("]", "");
                                     ramp = new ArrayList<String>(Arrays.asList(tempRamp.split(", ")));
                                 }
+                                Log.d("test", "ramp: " + ramp);
                                 callback.onCallBack(ramp);
                             } else {
                                 // document dont exist
@@ -144,24 +145,12 @@ public class UserDAO {
     public void updateUser(UserModel user) {
         db = FirebaseFirestore.getInstance();
         if (user.getPassword() == null) {
-
             db.collection("user").document(user.getEmail())
                     .update("name", user.getName(),
                             "number", user.getNumber(),
                             "dob", user.getDob(),
                             "gender", user.getGender(),
-                            "img_url", user.getImg_url())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
+                            "img_url", user.getImg_url());
         } else {
             db.collection("user").document(user.getEmail())
                     .update("name", user.getName(),
@@ -169,21 +158,32 @@ public class UserDAO {
                             "dob", user.getDob(),
                             "gender", user.getGender(),
                             "img_url", user.getImg_url(),
-                            "password", user.getPassword())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
+                            "password", user.getPassword());
             ;
         }
 
 
+    }
+
+    // USER CONTRIBUTIONS
+    public void getContribution(String email, BookmarkCallback callback) {
+        db = FirebaseFirestore.getInstance();
+        db.collection("points")
+                .whereEqualTo("uploader", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<String> ramp = new ArrayList<String>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                ramp.add(document.getId());
+                            }
+                            callback.onCallBack(ramp);
+                        } else {
+                            Log.d("LOG", "FIRESTORE: Error getting contributions - ", task.getException());
+                        }
+                    }
+                });
     }
 }

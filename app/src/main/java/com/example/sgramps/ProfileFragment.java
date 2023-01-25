@@ -51,14 +51,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnEdit:
-                Log.d("test", "edit");
                 getParentFragmentManager().beginTransaction().detach(MainActivity.fragmentEdit).commit();
                 getParentFragmentManager().beginTransaction().attach(MainActivity.fragmentEdit).commit();
                 getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentEdit).commit();
                 MainActivity.active = MainActivity.fragmentEdit;
                 break;
             case R.id.btnContributions:
-                Log.d("test", "contribute");
+                getParentFragmentManager().beginTransaction().detach(MainActivity.fragmentContribution).commit();
+                getParentFragmentManager().beginTransaction().attach(MainActivity.fragmentContribution).commit();
+                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentContribution).commit();
+                MainActivity.active = MainActivity.fragmentContribution;
                 break;
             case R.id.btnLogoff:
                 Log.d("test", "logoff");
