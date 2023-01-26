@@ -2,7 +2,6 @@ package com.example.sgramps.models;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -16,16 +15,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +60,6 @@ public class UserDAO {
                                     tempRamp = tempRamp.replace("]", "");
                                     ramp = new ArrayList<String>(Arrays.asList(tempRamp.split(", ")));
                                 }
-                                Log.d("test", "ramp: " + ramp);
                                 callback.onCallBack(ramp);
                             } else {
                                 // document dont exist
@@ -115,7 +107,8 @@ public class UserDAO {
         storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference("profileImages/" + user.getEmail());
 
-        if (!user.getImg_url().contains("firebasestorage")) {
+        // perform upload of image from uri
+        if (!user.getImg_url().contains("firebasestorage.googleapis.com")) {
             Uri file = Uri.parse(user.getImg_url());
             StorageReference uploadRef = storageReference.child(file.getLastPathSegment());
             Task<UploadTask.TaskSnapshot> uploadTask = uploadRef.putFile(file);
@@ -138,6 +131,7 @@ public class UserDAO {
                 }
             });
         } else {
+            // perform firestore update
             updateUser(user);
         }
     }

@@ -76,6 +76,7 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
     }
 
     private void showRecyclerView(List<String> data) {
+
         //Reference of RecyclerView
         mRecyclerView = view.findViewById(R.id.recyclerViewTiles);
         //Linear Layout Manager
@@ -93,6 +94,11 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
         userDb.getBookmark(email, new UserDAO.BookmarkCallback() {
             @Override
             public void onCallBack(List<String> bookmarks) {
+                if (bookmarks.size() == 0) {
+                    TextView txtTiles = view.findViewById(R.id.txtNoItems);
+                    txtTiles.setText("- No bookmarks -");
+                    txtTiles.setVisibility(View.VISIBLE);
+                }
                 showRecyclerView(bookmarks);
             }
         });
@@ -103,6 +109,11 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
         userDb.getContribution(email, new UserDAO.BookmarkCallback() {
             @Override
             public void onCallBack(List<String> contributions) {
+                if (contributions.size() == 0) {
+                    TextView txtTiles = view.findViewById(R.id.txtNoItems);
+                    txtTiles.setText("- No contributions -");
+                    txtTiles.setVisibility(View.VISIBLE);
+                }
                 showRecyclerView(contributions);
             }
         });

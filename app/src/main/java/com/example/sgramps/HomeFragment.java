@@ -3,11 +3,15 @@ package com.example.sgramps;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,6 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +46,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -92,6 +99,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
+                map.getUiSettings().setMapToolbarEnabled(false);
 
                 // GET USER LOCATION FUNCTION
                 btnLocate.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +179,6 @@ public class HomeFragment extends Fragment {
 
     // get current location
     private void getLocation(FusedLocationProviderClient fusedLocationClient) {
-        Toast.makeText(getActivity(), "Getting location...", Toast.LENGTH_SHORT).show();
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
                 .setWaitForAccurateLocation(true)
                 .setMinUpdateIntervalMillis(3000)
@@ -203,14 +210,15 @@ public class HomeFragment extends Fragment {
             }
         };
 
-        //
-
+        // check for permissions
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            btnLocate.setEnabled(true);
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
         } else {
+            Toast.makeText(getActivity(), "Getting location...", Toast.LENGTH_SHORT).show();
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
     }
@@ -227,6 +235,10 @@ public class HomeFragment extends Fragment {
                     LatLng latlng = new LatLng(gp.getLatitude(), gp.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latlng);
+                    Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.wheelchair_icon);
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, 220, 270, false);
+                    BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
+                    markerOptions.icon(smallMarkerIcon);
                     Marker marker = map.addMarker(markerOptions);
                     marker.setTag(ramp);
                 }
@@ -248,6 +260,7 @@ public class HomeFragment extends Fragment {
     private void moveMap(LatLng latlng, boolean zoom) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
+
 
         map.clear();
         if (map.getCameraPosition().zoom > 15 && zoom) {
@@ -295,6 +308,7 @@ public class HomeFragment extends Fragment {
         dialog.setContentView(bottomSheetView);
 
         Button btnCreate = (Button) dialog.findViewById(R.id.btnCreate);
+        ImageButton imgBtn = dialog.findViewById(R.id.imgBtnNavigate);
 
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,16 +316,28 @@ public class HomeFragment extends Fragment {
                 // pass to create page with latlng
             }
         });
+
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "http://maps.google.com/maps?daddr=" + latLng.latitude + "," + latLng.longitude;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
+            }
+        });
         dialog.show();
     }
 
     // open ramp popup view
     public void createRampDialog(RampsModel selectedMarker) {
+        LatLng latLng = new LatLng(selectedMarker.getGpoint().getLatitude(), selectedMarker.getGpoint().getLongitude());
         BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         View bottomSheetView = getLayoutInflater().inflate(R.layout.popup, null);
         dialog.setContentView(bottomSheetView);
 
         Button btnBookmark = (Button) dialog.findViewById(R.id.btnBookmark);
+        ImageButton imgBtn = dialog.findViewById(R.id.imgBtnNavigate);
         UserDAO userDb = new UserDAO();
 
         // set attributes accordingly
@@ -325,6 +351,10 @@ public class HomeFragment extends Fragment {
         for (String url : selectedMarker.getImg_url()
         ) {
             list.add(new CarouselItem(url));
+        }
+        if (list.size() <= 1) {
+            carousel.setShowNavigationButtons(false);
+            carousel.setInfiniteCarousel(false);
         }
         carousel.setData(list);
 
@@ -363,6 +393,16 @@ public class HomeFragment extends Fragment {
                     userDb.deleteBookmark(email, selectedMarker.getRamp_name());
                     Toast.makeText(getActivity(), "Removed from bookmarks", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "http://maps.google.com/maps?daddr=" + latLng.latitude + "," + latLng.longitude;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
             }
         });
         dialog.show();

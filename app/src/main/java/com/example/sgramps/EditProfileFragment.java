@@ -30,9 +30,12 @@ import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.auth.User;
 import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -200,6 +203,7 @@ public class EditProfileFragment extends Fragment {
         String imgUri = imgProfile.getTag().toString();
         UserModel user;
 
+        Log.d("test", "useruri" + imgUri);
         if (new_password.trim().length() == 0) {
             user = new UserModel(name, email, imgUri, gender, dob, number);
         } else {
@@ -218,6 +222,8 @@ public class EditProfileFragment extends Fragment {
         dialog.setContentView(bottomSheetView);
 
         TextView txtLibrary = dialog.findViewById(R.id.txtLibrary);
+        TextView txtRemove = dialog.findViewById(R.id.txtRemove);
+
         txtLibrary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,6 +234,19 @@ public class EditProfileFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+        txtRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://firebasestorage.googleapis.com/v0/b/sgramps.appspot.com/o/" +
+                        "profileImages%2Fdefault_profile_pic.png?alt=media&token=0bedb541-f42e-4a40-99c7-d119dd8da84f";
+                Picasso.get()
+                        .load(url)
+                        .into(imgProfile);
+                imgProfile.setTag(url);
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 }

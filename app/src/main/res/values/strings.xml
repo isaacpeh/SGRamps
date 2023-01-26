@@ -3,6 +3,6 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="defaultpic_url">https://firebasestorage.googleapis.com/v0/b/sgramps.appspot.com/o/profileImages%2Fdefault_profile_pic.png?alt=media&amp;token=0bedb541-f42e-4a40-99c7-d119dd8da84f</string>
 </resources>

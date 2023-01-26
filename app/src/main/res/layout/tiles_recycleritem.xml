@@ -30,7 +30,6 @@
                 android:layout_height="170dp"
                 android:scaleType="centerCrop" />
 
-
             <TextView
                 android:id="@+id/txtTileTitle"
                 android:layout_width="170dp"
@@ -39,7 +38,11 @@
                 android:gravity="center"
                 android:paddingHorizontal="4dp"
                 android:textColor="@color/secondary_blue"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="15sp"
+                android:autoSizeStepGranularity="2sp" />
 
         </LinearLayout>
 
