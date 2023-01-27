@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
@@ -62,6 +63,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -316,6 +318,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // pass to create page with latlng
+                Bundle result = new Bundle();
+                double[] locationArr = {latLng.latitude, latLng.longitude};
+                result.putDoubleArray("latlng", locationArr);
+                getParentFragmentManager().setFragmentResult("requestLatlng", result);
+                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentUpload).commit();
+                BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.bottom_navigation_view);
+                mBottomNavigationView.setSelectedItemId(R.id.upload_page);
+                dialog.dismiss();
             }
         });
 

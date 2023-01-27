@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -128,6 +129,21 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            requireActivity().getSupportFragmentManager().setFragmentResultListener("requestLatlng", this, new FragmentResultListener() {
+                @Override
+                public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                    double[] result = bundle.getDoubleArray("latlng");
+                    txtLat.setText(String.valueOf(result[0]));
+                    txtLong.setText(String.valueOf(result[1]));
+                }
+            });
+        }
+    }
+
+    @Override
     public void onItemClick(View view, int position) {
         //adapter.getItem(position)
         if (position == 0) {
@@ -160,11 +176,8 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
                     dialog.dismiss();
                 }
             });
-
             dialog.show();
-
         }
-
     }
 
     @Override
@@ -275,14 +288,14 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
             });
 
         } catch (NumberFormatException ex) {
-            Log.d("test", " " + ex);
+            Log.d("LOG", "ERROR: " + ex);
             if (ex.getMessage().contains("empty String")) {
                 Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), "Error uploading ramp", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception ex) {
-            Log.d("test", " " + ex);
+            Log.d("LOG", "ERROR: " + ex);
             if (ex.getMessage().contains("Longitude") || ex.getMessage().contains("Latitude")) {
                 Toast.makeText(getActivity(), "Invalid location", Toast.LENGTH_SHORT).show();
             } else {
