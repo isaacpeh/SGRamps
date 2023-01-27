@@ -113,6 +113,7 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnCreate.setEnabled(false);
                 createRamp();
             }
         });
@@ -263,6 +264,7 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
 
             if (imgs.size() == 0) {
                 Toast.makeText(getActivity(), "Please add at least 1 photo", Toast.LENGTH_SHORT).show();
+                btnCreate.setEnabled(true);
                 return;
             }
 
@@ -283,11 +285,13 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
                         getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
                         BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.bottom_navigation_view);
                         mBottomNavigationView.setSelectedItemId(R.id.home_page);
+                        reset();
                     }
                 }
             });
 
         } catch (NumberFormatException ex) {
+            btnCreate.setEnabled(true);
             Log.d("LOG", "ERROR: " + ex);
             if (ex.getMessage().contains("empty String")) {
                 Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -295,6 +299,7 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
                 Toast.makeText(getActivity(), "Error uploading ramp", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception ex) {
+            btnCreate.setEnabled(true);
             Log.d("LOG", "ERROR: " + ex);
             if (ex.getMessage().contains("Longitude") || ex.getMessage().contains("Latitude")) {
                 Toast.makeText(getActivity(), "Invalid location", Toast.LENGTH_SHORT).show();
@@ -302,12 +307,17 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
                 Toast.makeText(getActivity(), "Error uploading ramp", Toast.LENGTH_SHORT).show();
             }
         }
+    }
 
-        // check if any field is empty
-        // pull data
-        // pull images
-        // upload images
-        // upload ramp details
-
+    public void reset() {
+        btnCreate.setEnabled(true);
+        txtDes.setText("");
+        txtName.setText("");
+        txtLong.setText("");
+        txtLat.setText("");
+        imagesSource = new ArrayList<>();
+        Uri uri = Uri.parse("android.resource://com.example.sgramps/drawable/camerabtn");
+        imagesSource.add(uri);
+        showRecyclerView(imagesSource);
     }
 }

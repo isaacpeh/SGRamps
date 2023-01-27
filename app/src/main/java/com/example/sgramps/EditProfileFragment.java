@@ -1,5 +1,11 @@
 package com.example.sgramps;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -7,8 +13,10 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +40,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -203,7 +212,6 @@ public class EditProfileFragment extends Fragment {
         String imgUri = imgProfile.getTag().toString();
         UserModel user;
 
-        Log.d("test", "useruri" + imgUri);
         if (new_password.trim().length() == 0) {
             user = new UserModel(name, email, imgUri, gender, dob, number);
         } else {
@@ -223,6 +231,20 @@ public class EditProfileFragment extends Fragment {
 
         TextView txtLibrary = dialog.findViewById(R.id.txtLibrary);
         TextView txtRemove = dialog.findViewById(R.id.txtRemove);
+        TextView txtCamera = dialog.findViewById(R.id.txtCamera);
+
+        txtCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 43);
+                } else {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 1);
+                }
+                dialog.dismiss();
+            }
+        });
 
         txtLibrary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,6 +256,7 @@ public class EditProfileFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+
         txtRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,5 +271,23 @@ public class EditProfileFragment extends Fragment {
         });
 
         dialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Uri uri = getImageUri(getActivity(), photo);
+            imgProfile.setImageURI(uri);
+            imgProfile.setTag(uri);
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }
