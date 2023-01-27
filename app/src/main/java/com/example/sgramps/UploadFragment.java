@@ -42,7 +42,7 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
         view = inflater.inflate(R.layout.fragment_upload, container, false);
         Uri uri = Uri.parse("android.resource://com.example.sgramps/drawable/camerabtn");
 
-        // Polpulate dat
+        // populate data
         imagesSource.add(uri);
         showRecyclerView(imagesSource);
         return view;
@@ -52,17 +52,14 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
         adapter = new AddImagesItemAdapter(getActivity(),data);
-        Log.d("test","0000000000000000"+data);
         adapter.setClickListener(this);
         mRecyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d("test",""+position);
         //adapter.getItem(position)
         if(position == 0){
-            Log.d("test","aaaaaaaaaa");
             BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
             View bottomSheetView = getLayoutInflater().inflate(R.layout.import_image_popup,null);
             dialog.setContentView(bottomSheetView);
@@ -87,10 +84,7 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
         if (resultCode == Activity.RESULT_OK)
         {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            Log.d("test",""+photo);
-
             Uri uri = getImageUri(getActivity(),photo);
-            Log.d("test","-----"+uri);
 
             imagesSource.add(uri);
             adapter.notifyItemInserted(imagesSource.size() - 1);

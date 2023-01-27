@@ -19,8 +19,6 @@ public class AddImagesItemAdapter extends RecyclerView.Adapter<AddImagesItemAdap
     ItemClickListener mClickListener;
 
     public AddImagesItemAdapter(Context context, ArrayList<Uri> images){
-        Log.d("test","from adapter"+images);
-
         this.images = images;
         this.mInflater = LayoutInflater.from(context);
     }
@@ -35,7 +33,6 @@ public class AddImagesItemAdapter extends RecyclerView.Adapter<AddImagesItemAdap
     @Override
     public void onBindViewHolder(@NonNull AddImagesItemAdapter.ViewHolder holder, int position) {
         Uri imagesRamp = images.get(position);
-        Log.d("test",""+imagesRamp);
         holder.mImageView.setImageURI(imagesRamp);
     }
 

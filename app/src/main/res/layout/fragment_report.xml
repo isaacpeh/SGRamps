@@ -37,7 +37,7 @@
 
         <!--    Description input    -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/desInput"
+            android:id="@+id/reportDesInput"
             android:layout_width="980px"
             android:layout_height="400px"
             android:hint="More information"
@@ -96,7 +96,7 @@
 
         <!--    Upload button    -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/uploadRampBtn"
+            android:id="@+id/submitReportBtn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="230px"

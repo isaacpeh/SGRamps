@@ -14,13 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SGRamps"
         tools:targetApi="31">
-        <activity
-            android:name=".testing"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
 
         <activity
             android:name=".SplashScreen"
