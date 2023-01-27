@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.Theme.SGRamps.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.SGRamps.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <style name="bottomNavigation" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/secondary_blue</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="bottomNavigation.Active" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primary_blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.SGRamps.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="android:background">@drawable/rounded_dialog</item>
+    </style>
+
+    <style name="Widget.SGRamps.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/active_indicator_blue</item>
+    </style>
+
+    <style name="Widget.SGRamps.BottomNav" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/active_indicator_blue</item>
+    </style>
+
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="profileImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">200dp</item>
+    </style>
+
+    <style name="Widget.SGRamps.DDL" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="android:popupElevation">4dp</item>
+    </style>
+</resources>
