@@ -14,8 +14,6 @@
         <!-- Status icon dark. -->
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
-
-
     </style>
 
     <style name="Theme.SGRamps.Fullscreen" parent="Theme.SGRamps">

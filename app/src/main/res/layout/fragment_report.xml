@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F9FC"
+    tools:context=".UploadFragment">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="15dp"
+        android:paddingTop="15dp"
+        android:stretchColumns="1">
+        <!--    Page title    -->
+        <TextView
+            android:id="@+id/UploadRampTitle"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Ramp inaccessible?"
+            android:textColor="@color/textColor"
+            android:textSize="23dp"
+            android:textStyle="bold"
+            android:layout_marginTop="50px"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:ems="10"
+            android:lines="2"
+            android:text="@string/report_ramp_desc_1"
+            android:textColor="@color/textColor"
+            android:textSize="12dp"
+            android:textStyle="bold"/>
+
+        <!--    Description input    -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reportDesInput"
+            android:layout_width="980px"
+            android:layout_height="400px"
+            android:hint="More information"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/white"
+            android:layout_marginLeft="10px"
+            android:layout_marginTop="20px"
+            app:boxStrokeColor="@color/buttonColor"
+            app:hintTextColor="@color/buttonColor"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:textCursorDrawable="@drawable/blue_cursor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Include Images"
+            android:textColor="@color/textColor"
+            android:textSize="23dp"
+            android:textStyle="bold"
+            android:layout_marginTop="50px"/>
+
+        <TextView
+            android:id="@+id/descriptionTxt"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:lines="2"
+            android:minLines="2"
+            android:maxLines="10"
+            android:text="@string/report_ramp_desc_2"
+            android:textColor="@color/textColor"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+        <!--    Image recycler view    -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_report"
+            android:layout_width="match_parent"
+            android:layout_height="99dp"
+            android:layout_marginTop="25px"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.363"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.193" />
+
+        <!--    Upload button    -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submitReportBtn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="230px"
+            android:text="Submit Report"
+            app:backgroundTint="@color/buttonColor"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"/>
+
+    </TableLayout>
+
+
+</ScrollView>
