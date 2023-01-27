@@ -7,6 +7,7 @@
     android:background="#F4F5F8">
 
     <TextView
+        android:text="Bookmarks"
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +15,7 @@
         android:layout_marginTop="55dp"
         android:textSize="25dp"
         android:textStyle="bold"
+        android:textColor="@color/textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

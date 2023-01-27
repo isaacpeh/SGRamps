@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.checkerframework.checker.units.qual.C;
@@ -189,6 +190,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 if (locationResult == null) {
+                    Toast.makeText(getActivity(), "Unable to get location", Toast.LENGTH_SHORT).show();
                     btnLocate.setEnabled(true);
                     return;
                 } else {

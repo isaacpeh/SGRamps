@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     public static Fragment fragmentProfile = new ProfileFragment();
     public static Fragment fragmentEdit = new EditProfileFragment();
     public static Fragment fragmentContribution = new BookmarksFragment();
+    public static Fragment fragmentUpload = new UploadFragment();
+    public static Fragment fragmentReport = new ReportFragment();
 
     FragmentManager fm = getSupportFragmentManager();
     public static Fragment active;
@@ -32,14 +34,16 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1")
                 .hide(fragmentBookmark)
                 .hide(fragmentProfile)
-                .hide(fragmentEdit)
                 .hide(fragmentContribution)
+                .hide(fragmentUpload)
+                .hide(fragmentEdit)
                 .commit();
 
         fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentUpload, "3").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentProfile, "5").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentEdit, "6").commit();
-        fm.beginTransaction().add(R.id.frame_layout, fragmentContribution, "6").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentContribution, "7").commit();
 
         /*Fragment fragment = new HomeFragment();
         getSupportFragmentManager()
@@ -62,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
                         active = fragmentBookmark;
                         return true;
                     case R.id.upload_page:
-
+                        fm.beginTransaction().hide(active).show(fragmentUpload).commit();
+                        active = fragmentUpload;
                         return true;
                     case R.id.notification_page:
 

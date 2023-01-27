@@ -1,13 +1,17 @@
 package com.example.sgramps.models;
 
 import android.location.Location;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -15,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +32,14 @@ public class RampsDAO {
     public RampsDAO() {
     }
 
+    public interface UploadCallback {
+        void onCallBack(String msg);
+    }
+
+    public interface CreateCallback {
+        void onCallBack(String result);
+    }
+
     public interface FirebaseCallback {
         void onCallBack(List<RampsModel> ramps);
     }
@@ -34,27 +48,77 @@ public class RampsDAO {
         void onCallBack(RampsModel ramp);
     }
 
-    public void addRamp(RampsModel ramp) { // add callback or smth
+    public void addRamp(RampsModel ramp, CreateCallback callback) { // add callback or smth
         db = FirebaseFirestore.getInstance();
-        CollectionReference dbRamps = db.collection("points");
-        //List<String> img_arr = Arrays.asList("img_1.png");
-        //RampsModel rampz = new RampsModel("CoolRamp", "coolest ramp in town", Timestamp.now(), "isaac@gmail.com", img_arr,  true, new GeoPoint(5.373982, 2.705164));
+        storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference("rampImages/" + ramp.getRamp_name());
+        List<String> img_urls = new ArrayList<String>();
 
-        dbRamps
-                .document(ramp.getRamp_name())
-                .set(ramp).
-                addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("LOG", " FIRESTORE: Successfully inserted ramp " + ramp.getRamp_name());
+        for (int i = 0; i < ramp.getImg_url().size(); i++) {
+            Uri file = Uri.parse(ramp.getImg_url().get(i));
+            StorageReference uploadRef = storageReference.child(file.getLastPathSegment());
+            Task<UploadTask.TaskSnapshot> uploadTask = uploadRef.putFile(file);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // get image url
+                    uploadRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // perform ramp creation
+                            img_urls.add(uri.toString());
+                            if (img_urls.size() == ramp.getImg_url().size()) {
+                                ramp.setImg_url(img_urls);
+                                createRamp(ramp, new UploadCallback() {
+                                    @Override
+                                    public void onCallBack(String msg) {
+                                        callback.onCallBack(msg);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    public void createRamp(RampsModel ramp, UploadCallback callback) {
+        CollectionReference dbRamps = db.collection("points");
+        dbRamps.document(ramp.getRamp_name()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String error = "Ramp name already exists";
+                        callback.onCallBack(error);
+                    } else {
+                        dbRamps.document(ramp.getRamp_name())
+                                .set(ramp).
+                                addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d("LOG", " FIRESTORE: Successfully inserted ramp " + ramp.getRamp_name());
+                                        String result = "Successfully uploaded ramp";
+                                        callback.onCallBack(result);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("LOG", "FIRESTORE: Failed to insert ramp " + ramp.getRamp_name());
+                                        String error = "Failed to upload ramp";
+                                        callback.onCallBack(error);
+                                    }
+                                });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("LOG", "FIRESTORE: Failed to insert ramp " + ramp.getRamp_name());
-                    }
-                });
+                } else {
+                    String error = "Unknown error";
+                    callback.onCallBack(error);
+                }
+            }
+        });
     }
 
     public void getRamp(LatLng latLng, FirebaseCallback callback) {

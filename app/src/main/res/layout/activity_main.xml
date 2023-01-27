@@ -20,7 +20,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         style="@style/Widget.SGRamps.BottomNav"
         android:id="@+id/bottom_navigation_view"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:itemIconTint="@drawable/navigation_bar_color"
