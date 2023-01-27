@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
+    android:scrollbars = "vertical"
+    android:scrollbarStyle="insideInset"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F9FC"
+    tools:context=".UploadFragment"
+    >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="15dp"
+        android:paddingTop="15dp"
+        android:stretchColumns="1">
+        <!--    Page title    -->
+        <TextView
+            android:id="@+id/UploadRampTitle"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Upload Ramp"
+            android:textColor="@color/textColor"
+            android:textSize="23dp"
+            android:textStyle="bold"
+            android:layout_marginTop="50px"/>
+        <!--    Ramp title    -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="110dp"
+            android:layout_height="35dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Title"
+            android:textColor="@color/textColor"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="50px"
+            android:layout_marginLeft="10px"
+            />
+        <!--    Ramp title input    -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/titleInput"
+            android:layout_width="980px"
+            android:layout_height="wrap_content"
+            android:hint="Enter Title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/white"
+            android:layout_marginLeft="10px"
+            app:boxStrokeColor="@color/buttonColor"
+            app:hintTextColor="@color/buttonColor"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:textCursorDrawable="@drawable/blue_cursor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <!--   location     -->
+        <TextView
+            android:id="@+id/LocationTxt"
+            android:layout_width="86dp"
+            android:layout_height="34dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Location"
+            android:textColor="@color/textColor"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10px"
+            android:layout_marginTop="90px"/>
+        <!--    input for longitude and latitude    -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30px"
+            >
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/longInput"
+                android:layout_width="490px"
+                android:layout_height="wrap_content"
+                android:hint="longitude "
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:background="@color/white"
+                app:boxStrokeColor="@color/buttonColor"
+                app:hintTextColor="@color/buttonColor"
+
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:textCursorDrawable="@drawable/blue_cursor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/latInput"
+                android:layout_width="490px"
+                android:layout_height="wrap_content"
+                android:hint="latitude"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:background="@color/white"
+                android:layout_marginLeft="10px"
+                app:boxStrokeColor="@color/buttonColor"
+                app:hintTextColor="@color/buttonColor"
+
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:textCursorDrawable="@drawable/blue_cursor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </TableRow>
+        <!--    My location button    -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/currentLocationBtn"
+            android:layout_width="356dp"
+            android:layout_height="60dp"
+            android:text="Get My Location"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/grey"
+            android:layout_marginTop="30px"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
+            android:drawableLeft="@drawable/location_icon"
+            />
+        <!--    Description    -->
+        <TextView
+            android:id="@+id/descriptionTxt"
+            android:layout_width="110dp"
+            android:layout_height="35dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Description"
+            android:textColor="@color/textColor"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10px"
+            android:layout_marginTop="90px"/>
+        <!--    Description input    -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/desInput"
+            android:layout_width="980px"
+            android:layout_height="400px"
+            android:hint="Enter Description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/white"
+            android:layout_marginLeft="10px"
+            android:layout_marginTop="20px"
+            app:boxStrokeColor="@color/buttonColor"
+            app:hintTextColor="@color/buttonColor"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textCursorDrawable="@drawable/blue_cursor" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <!--    Add images    -->
+        <TextView
+            android:id="@+id/AddImgText"
+            android:layout_width="118dp"
+            android:layout_height="34dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Add Images"
+            android:textColor="@color/textColor"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="90px"
+            android:layout_marginLeft="10px"
+            />
+        <!--    Image recycler view    -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="367dp"
+            android:layout_height="99dp"
+            android:layout_marginTop="25px"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.363"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.193" />
+        <!--    Upload button    -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/uploadRampBtn"
+            android:layout_width="356dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="45px"
+            android:text="Upload Ramp"
+            app:backgroundTint="@color/buttonColor"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"/>
+        <!--    Spacing for  navigation bar   -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="300px"/>
+    </TableLayout>
+</ScrollView>
