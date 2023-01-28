@@ -10,6 +10,6 @@
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="title_activity_custom_dialog">CustomDialog</string>
-    <string name="report_ramp_desc_1">Your reports help us improve the accuracy of ramp \n locations and accessibility for all our users.</string>
-    <string name="report_ramp_desc_2">Uploading photographs may aid in a more straight \n forward explanation of the problem.</string>
+    <string name="report_ramp_desc_1">Your reports help us improve the accuracy of ramp\nlocations and accessibility for all our users.</string>
+    <string name="report_ramp_desc_2">Uploading photographs may aid in a more\nstraightforward explanation of the problem.</string>
 </resources>

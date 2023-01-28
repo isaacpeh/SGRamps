@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 .hide(fragmentContribution)
                 .hide(fragmentUpload)
                 .hide(fragmentEdit)
+                .hide(fragmentReport)
                 .commit();
 
         fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").commit();
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.frame_layout, fragmentProfile, "5").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentEdit, "6").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentContribution, "7").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentReport, "8").commit();
 
         /*Fragment fragment = new HomeFragment();
         getSupportFragmentManager()

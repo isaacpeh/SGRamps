@@ -83,7 +83,7 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
 
         Uri uri = Uri.parse("android.resource://com.example.sgramps/drawable/camerabtn");
 
-        // populate data
+        imagesSource = new ArrayList<>();
         imagesSource.add(uri);
         showRecyclerView(imagesSource);
 

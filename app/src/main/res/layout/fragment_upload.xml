@@ -9,7 +9,6 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="18dp"
     android:background="#FFFFFF">
-    <!--    Page title    -->
 
     <TextView
         android:id="@+id/UploadRampTitle"
@@ -209,18 +208,5 @@
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge" />
 
         </LinearLayout>
-
-        <!--    Ramp title    -->
-        <!--    Ramp title input    -->
-        <!--   location     -->
-
-        <!--    input for longitude and latitude    -->
-
-        <!--    My location button    -->
-        <!--    Description    -->
-        <!--    Description input    -->
-        <!--    Add images    -->
-        <!--    Image recycler view    -->
-        <!--    Upload button    -->
     </ScrollView>
 </LinearLayout>

@@ -203,6 +203,11 @@ public class EditProfileFragment extends Fragment {
     public void saveProfile() {
         // Reauthenticate user
         // https://firebase.google.com/docs/auth/android/manage-users#re-authenticate_a_user
+        String current_password = editPassword.getText().toString();
+        if (current_password.trim().length() == 0) {
+            Toast.makeText(getContext(), "Enter password to update", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String name = editName.getText().toString();
         String number = editNumber.getText().toString();
@@ -211,6 +216,11 @@ public class EditProfileFragment extends Fragment {
         String new_password = editNewPassword.getText().toString();
         String imgUri = imgProfile.getTag().toString();
         UserModel user;
+
+        if (name.trim().length() == 0 || number.trim().length() == 0) {
+            Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (new_password.trim().length() == 0) {
             user = new UserModel(name, email, imgUri, gender, dob, number);

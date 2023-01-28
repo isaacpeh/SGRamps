@@ -3,7 +3,6 @@ package com.example.sgramps.models;
 import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -12,7 +11,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,7 +46,7 @@ public class RampsDAO {
         void onCallBack(RampsModel ramp);
     }
 
-    public void addRamp(RampsModel ramp, CreateCallback callback) { // add callback or smth
+    public void addRamp(RampsModel ramp, CreateCallback callback) {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference("rampImages/" + ramp.getRamp_name());

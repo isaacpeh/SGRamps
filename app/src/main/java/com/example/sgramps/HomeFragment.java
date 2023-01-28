@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,6 +104,7 @@ public class HomeFragment extends Fragment {
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
                 map.getUiSettings().setMapToolbarEnabled(false);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3433453, 103.783137), 11.0f));
 
                 // GET USER LOCATION FUNCTION
                 btnLocate.setOnClickListener(new View.OnClickListener() {
@@ -133,8 +135,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         closeKeyboard();
-                        autoCompleteTextView.clearFocus();
-
                         Log.d("LOG", "ADDRESS SELECTED: " + autoCompleteTextView.getText().toString());
                         LatLng latlng = getlatLng(autoCompleteTextView.getText().toString());
                         if (latlng != null) {
@@ -350,6 +350,8 @@ public class HomeFragment extends Fragment {
 
         Button btnBookmark = (Button) dialog.findViewById(R.id.btnBookmark);
         ImageButton imgBtn = dialog.findViewById(R.id.imgBtnNavigate);
+        ImageButton imgBtnReport = dialog.findViewById(R.id.imgBtnReport);
+
         UserDAO userDb = new UserDAO();
 
         // set attributes accordingly
@@ -408,6 +410,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // navigate button click function
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -417,6 +420,20 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        // report button click function
+        imgBtnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle result = new Bundle();
+                result.putString("ramp_name_report", selectedMarker.getRamp_name());
+                getParentFragmentManager().setFragmentResult("requestRampReport", result);
+                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentReport).commit();
+                MainActivity.active = MainActivity.fragmentReport;
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 
