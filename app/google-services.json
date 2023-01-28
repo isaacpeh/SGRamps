@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "394693257235",
+    "project_id": "sgramps",
+    "storage_bucket": "sgramps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394693257235:android:1721acf4c4e7380bfef7e6",
+        "android_client_info": {
+          "package_name": "com.example.sgramps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394693257235-gfunrvul0it1pc9i9bilp9e1hllogv4t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sgramps",
+            "certificate_hash": "6af6995b14e92648be46051c6ba3fed1297369ef"
+          }
+        },
+        {
+          "client_id": "394693257235-442lgk4rierkcs9omr400u6t2psefoh5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVZ3bYBf6IrSDnQw92-7fAsHgLXXkKfoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394693257235-442lgk4rierkcs9omr400u6t2psefoh5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    style="@style/Widget.SGRamps.BottomSheet">
+
+    <!-- Drag handle for accessibility -->
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/drag_handle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="30dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingLeft="30dp">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/gallery_icon" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/txtLibrary"
+                android:layout_width="331dp"
+                android:layout_height="40dp"
+                android:paddingLeft="20dp"
+                android:text="Choose from library"
+                android:textSize="16sp"
+                android:textColor="#4A4A4A" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingVertical="10dp"
+            android:paddingLeft="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/takephoto_icon" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/txtCamera"
+                android:layout_width="331dp"
+                android:layout_height="40dp"
+                android:paddingLeft="20dp"
+                android:text="Take photo"
+                android:textSize="16sp"
+                android:textColor="#4A4A4A" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingVertical="10dp"
+            android:paddingLeft="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/delete_icon" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/txtRemove"
+                android:layout_width="331dp"
+                android:layout_height="40dp"
+                android:paddingLeft="20dp"
+                android:text="Remove current picture"
+                android:textSize="16sp"
+                android:textColor="#FF3333" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
