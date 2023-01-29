@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="18dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:paddingVertical="5dp"
+        android:id="@+id/UploadRampTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:text="Ramp inaccessible?"
+        android:textColor="@color/textColor"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_marginBottom="25dp"
+        android:paddingVertical="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/report_ramp_desc_1"
+        android:textColor="@color/textColor"
+        android:textSize="12dp"
+        android:gravity="center_vertical" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarSize="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--    Description input    -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="400px"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:background="@color/white"
+                app:boxStrokeColor="@color/buttonColor"
+                app:hintTextColor="@color/buttonColor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reportDesInput"
+                    android:gravity="top"
+                    android:textCursorDrawable="@drawable/blue_cursor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_marginTop="45dp"
+                android:paddingVertical="5dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Include Images"
+                android:textColor="@color/textColor"
+                android:textSize="23dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:paddingVertical="5dp"
+                android:id="@+id/descriptionTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_ramp_desc_2"
+                android:textColor="@color/textColor"
+                android:textSize="12dp"
+                android:gravity="center_vertical" />
+            <!--    Image recycler view    -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="15dp"
+                android:id="@+id/recycler_view_report"
+                android:layout_width="match_parent"
+                android:layout_height="99dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.363"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.193" />
+
+            <!--    Upload button    -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitReportBtn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="10dp"
+                android:text="Submit Report"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
