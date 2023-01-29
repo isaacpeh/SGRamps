@@ -6,7 +6,11 @@ import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationBarView;
@@ -19,9 +23,13 @@ public class MainActivity extends AppCompatActivity {
     public static Fragment fragmentContribution = new BookmarksFragment();
     public static Fragment fragmentUpload = new UploadFragment();
     public static Fragment fragmentReport = new ReportFragment();
+    public static Fragment fragmentLogin = new login_page();
+    public static Fragment fragmentRegister = new register_page();
+    public static Fragment fragmentStartup = new start_up_page();
 
-    FragmentManager fm = getSupportFragmentManager();
     public static Fragment active;
+    FragmentManager fm = getSupportFragmentManager();
+    public String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +38,37 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         NavigationBarView bottomNav = findViewById(R.id.bottom_navigation_view);
 
-        active = fragmentHome;
-        fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1")
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        try {
+            email = fAuth.getCurrentUser().getEmail();
+            Log.d("test", email);
+        } catch (NullPointerException ex) {
+            Log.d("test", "empty");
+        }
+
+        active = fragmentStartup;
+        fm.beginTransaction().add(R.id.frame_layout, fragmentStartup, "11")
                 .hide(fragmentBookmark)
                 .hide(fragmentProfile)
                 .hide(fragmentContribution)
                 .hide(fragmentUpload)
                 .hide(fragmentEdit)
                 .hide(fragmentReport)
+                .hide(fragmentLogin)
+                .hide(fragmentRegister)
+                .hide(fragmentHome)
                 .commit();
 
+        fm.beginTransaction().add(R.id.frame_layout, fragmentHome, "1").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentBookmark, "2").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentUpload, "3").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentProfile, "5").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentEdit, "6").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentContribution, "7").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentReport, "8").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentLogin, "9").commit();
+        fm.beginTransaction().add(R.id.frame_layout, fragmentRegister, "10").commit();
+        //fm.beginTransaction().add(R.id.frame_layout, fragmentStartup, "11").commit();
 
         /*Fragment fragment = new HomeFragment();
         getSupportFragmentManager()
