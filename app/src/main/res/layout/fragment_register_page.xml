@@ -18,6 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!--Display Name-->
         <TextView
             android:id="@+id/textView"
             android:layout_width="242dp"
@@ -38,6 +39,7 @@
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Email Address-->
         <TextView
             android:id="@+id/textView5"
             android:layout_width="242dp"
@@ -59,6 +61,7 @@
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Password-->
         <TextView
             android:id="@+id/textView2"
             android:layout_width="242dp"
@@ -70,7 +73,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="@color/white"
+            app:endIconMode="password_toggle">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -78,9 +82,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:inputType="phone"/>
+                android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Phone Number-->
         <TextView
             android:id="@+id/textView4"
             android:layout_width="242dp"
@@ -99,9 +104,11 @@
                 android:id="@+id/phoneNumberInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:inputType="phone"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Date of Birth-->
         <TextView
             android:id="@+id/textView6"
             android:layout_width="242dp"
@@ -124,6 +131,7 @@
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Gender-->
         <TextView
             android:layout_width="242dp"
             android:layout_height="wrap_content"
@@ -143,6 +151,7 @@
                 android:focusable="false"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Register Button-->
         <Button
             android:id="@+id/registerButton"
             android:layout_width="242dp"
@@ -156,6 +165,7 @@
 
     </LinearLayout>
 
+    <!--Login Button-->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
