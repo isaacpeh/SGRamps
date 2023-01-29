@@ -14,6 +14,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -58,6 +59,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.checkerframework.checker.units.qual.C;
@@ -81,7 +84,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // logged in user
-        email = "isaac@gmail.com";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
 
         // initialize view
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -425,15 +429,28 @@ public class HomeFragment extends Fragment {
         imgBtnReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.active = MainActivity.fragmentReport;
                 Bundle result = new Bundle();
                 result.putString("ramp_name_report", selectedMarker.getRamp_name());
                 getParentFragmentManager().setFragmentResult("requestRampReport", result);
                 getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentReport).commit();
-                MainActivity.active = MainActivity.fragmentReport;
                 dialog.dismiss();
             }
         });
 
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                if (MainActivity.active == MainActivity.fragmentReport) {
+                    getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
+                    MainActivity.active = MainActivity.fragmentHome;
+                } else {
+                    requireActivity().finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         dialog.show();
     }
 

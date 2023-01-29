@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreen extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +26,16 @@ public class SplashScreen extends AppCompatActivity {
                     e.printStackTrace();
                 } finally {
                     // Launch the MainActivity class
-                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+                    FirebaseUser user = fAuth.getCurrentUser();
+                    Intent intent;
+
+                    if (user == null) {
+                        intent = new Intent(SplashScreen.this, StartUpActivity.class);
+                    } else {
+                        Log.d("LOG", "USER LOGGED IN: " + user.getEmail());
+                        intent = new Intent(SplashScreen.this, MainActivity.class);
+                    }
                     startActivity(intent);
                 }
             }

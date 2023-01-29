@@ -1,13 +1,18 @@
 package com.example.sgramps;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -40,18 +45,31 @@ public class login_page extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeKeyboard();
+                view.clearFocus();
                 String emailString = email.getText().toString();
                 String passwordString = password.getText().toString();
+
+                if (emailString.trim().length() == 0 || passwordString.trim().length() == 0) {
+                    Toast.makeText(getActivity(), "Please fill in email and password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 fAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
-                            getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
-                            MainActivity.active = MainActivity.fragmentHome;
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
                         } else {
-                            Toast.makeText(getActivity(), "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            if (task.getException().getMessage().contains("no user record") ||
+                                    task.getException().getMessage().contains("password is invalid")) {
+                                Toast.makeText(getActivity(), "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Error occurred logging in", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
@@ -61,10 +79,47 @@ public class login_page extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentRegister).commit();
-                MainActivity.active = MainActivity.fragmentRegister;
+                closeKeyboard();
+                view.clearFocus();
+                Fragment fragment = new register_page();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .commit();
+                StartUpActivity.active = StartUpActivity.fragmentRegister;
             }
         });
+
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                if (StartUpActivity.active == StartUpActivity.fragmentLogin) {
+                    email.setText("");
+                    password.setText("");
+                    Fragment fragment = new start_up_page();
+                    getParentFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_layout, fragment)
+                            .commit();
+                    StartUpActivity.active = StartUpActivity.fragmentStartup;
+                } else {
+                    getActivity().finish();
+                }
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         return view;
     }
+
+    // hide soft keyboard
+    private void closeKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }

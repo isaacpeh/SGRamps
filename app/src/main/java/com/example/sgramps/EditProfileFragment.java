@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -32,12 +33,19 @@ import android.widget.Toast;
 
 import com.example.sgramps.models.UserDAO;
 import com.example.sgramps.models.UserModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -78,7 +86,8 @@ public class EditProfileFragment extends Fragment {
         btnSave = view.findViewById(R.id.btnSave);
         btnProfile = view.findViewById(R.id.imgBtnProfile);
 
-        email = "isaac@gmail.com";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
         getUser(email);
 
         autoCompleteTextView = view.findViewById(R.id.ddlGender);
@@ -209,29 +218,41 @@ public class EditProfileFragment extends Fragment {
             return;
         }
 
-        String name = editName.getText().toString();
-        String number = editNumber.getText().toString();
-        String dob = editDob.getText().toString();
-        String gender = autoCompleteTextView.getText().toString();
-        String new_password = editNewPassword.getText().toString();
-        String imgUri = imgProfile.getTag().toString();
-        UserModel user;
+        AuthCredential credential = EmailAuthProvider.getCredential(email, current_password);
+        FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
+        loggedInUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            String name = editName.getText().toString();
+                            String number = editNumber.getText().toString();
+                            String dob = editDob.getText().toString();
+                            String gender = autoCompleteTextView.getText().toString();
+                            String new_password = editNewPassword.getText().toString();
+                            String imgUri = imgProfile.getTag().toString();
+                            UserModel user;
 
-        if (name.trim().length() == 0 || number.trim().length() == 0) {
-            Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                            if (name.trim().length() == 0 || number.trim().length() == 0) {
+                                Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-        if (new_password.trim().length() == 0) {
-            user = new UserModel(name, email, imgUri, gender, dob, number);
-        } else {
-            user = new UserModel(name, email, new_password, imgUri, gender, dob, number);
-        }
+                            if (new_password.trim().length() == 0) {
+                                user = new UserModel(name, email, imgUri, gender, dob, number);
+                            } else {
+                                user = new UserModel(name, email, new_password, imgUri, gender, dob, number);
+                            }
 
-        UserDAO userDb = new UserDAO();
-        userDb.uploadImage(user);
-        Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
-        editPassword.setText("");
+                            UserDAO userDb = new UserDAO();
+                            userDb.uploadImage(user);
+                            Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
+                            editPassword.setText("");
+                        } else {
+                            Toast.makeText(getContext(), "Password is incorrect", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void showChooserDialog() {
