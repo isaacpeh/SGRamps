@@ -42,19 +42,26 @@ public class login_page extends Fragment {
             public void onClick(View v) {
                 String emailString = email.getText().toString();
                 String passwordString = password.getText().toString();
-
-                fAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
-                            getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
-                            MainActivity.active = MainActivity.fragmentHome;
-                        } else {
-                            Toast.makeText(getActivity(), "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                if (emailString.isEmpty()) {
+                    email.setError("Email is required");
+                    email.requestFocus();
+                } else if (passwordString.isEmpty()) {
+                    password.setError("Password is required");
+                    password.requestFocus();
+                } else {
+                    fAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
+                                MainActivity.active = MainActivity.fragmentHome;
+                            } else {
+                                Toast.makeText(getActivity(), "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
 
