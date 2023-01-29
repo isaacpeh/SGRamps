@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    style="@style/Widget.SGRamps.BottomSheet"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
+
+        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+            android:id="@+id/carousel"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            app:imageScaleType="centerCrop"
+            app:showBottomShadow="false"
+            app:showTopShadow="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <ImageView
+                android:id="@+id/imgIcon"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/navigate_icon" />
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="255dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingEnd="10dp"
+                android:textColor="@color/secondary_blue"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+            <!--change text color, image etx-->
+        </LinearLayout>
+
+        <View
+            android:layout_width="360dp"
+            android:layout_height="0.8dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/txtDescriptionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="25dp"
+            android:paddingTop="25dp"
+            android:paddingBottom="15dp"
+            android:text="Description"
+            android:textColor="@color/secondary_blue"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="95dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="20dp"
+            android:textColor="#717171"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/btnBookmark"
+                    android:layout_width="280dp"
+                    android:layout_height="54dp"
+                    android:layout_marginLeft="15dp" />
+
+                <ImageButton
+                    android:id="@+id/imgBtnNavigate"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/rounded_navbg"
+                    android:src="@drawable/goto_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageButton
+            android:id="@+id/imgBtnReport"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rounded_reportbg"
+            android:src="@drawable/report_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
