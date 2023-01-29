@@ -35,6 +35,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -53,7 +55,9 @@ public class ReportFragment extends Fragment implements AddImagesItemAdapter.Ite
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        email = "isaac@gmail.com";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
+        
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_report, container, false);
         desInput = view.findViewById(R.id.reportDesInput);
@@ -63,18 +67,6 @@ public class ReportFragment extends Fragment implements AddImagesItemAdapter.Ite
         imagesSource.add(uri);
         showRecyclerView(imagesSource);
 
-        // This callback will only be called when MyFragment is at least Started.
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                if (MainActivity.active == MainActivity.fragmentReport) {
-                    reset();
-                    getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
-                } else {
-                    requireActivity().finish();
-                }
-            }
-        };
 
         pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imgUri -> {
@@ -99,7 +91,6 @@ public class ReportFragment extends Fragment implements AddImagesItemAdapter.Ite
             }
         });
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         return view;
     }
 
@@ -156,6 +147,13 @@ public class ReportFragment extends Fragment implements AddImagesItemAdapter.Ite
                     desInput.setHint("Provide more information on '" + ramp_reported + "' ramp");
                 }
             });
+        } else {
+            try {
+                reset();
+            } catch (Exception e) {
+
+            }
+
         }
     }
 

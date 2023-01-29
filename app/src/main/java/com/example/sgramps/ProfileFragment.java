@@ -1,5 +1,6 @@
 package com.example.sgramps;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.example.sgramps.models.UserDAO;
 import com.example.sgramps.models.UserModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -41,7 +44,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnContributions.setOnClickListener(this);
         btnLogoff.setOnClickListener(this);
 
-        email = "isaac@gmail.com";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
         getUser(email);
 
         return view;
@@ -63,7 +67,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 MainActivity.active = MainActivity.fragmentContribution;
                 break;
             case R.id.btnLogoff:
-                Log.d("test", "logoff");
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), StartUpActivity.class);
+                startActivity(intent);
+                getActivity().finish();
                 break;
         }
     }

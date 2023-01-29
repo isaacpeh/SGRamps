@@ -46,6 +46,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.ByteArrayOutputStream;
@@ -70,7 +72,8 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        email = "isaac@gmail.com";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_upload, container, false);

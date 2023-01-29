@@ -1,11 +1,13 @@
 package com.example.sgramps;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -48,16 +50,25 @@ public class start_up_page extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentLogin).commit();
-                MainActivity.active = MainActivity.fragmentLogin;
+                Fragment fragment = new login_page();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .commit();
+
+                StartUpActivity.active = StartUpActivity.fragmentLogin;
             }
         });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentRegister).commit();
-                MainActivity.active = MainActivity.fragmentRegister;
+                Fragment fragment = new register_page();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .commit();
+                StartUpActivity.active = StartUpActivity.fragmentRegister;
             }
         });
         return view;

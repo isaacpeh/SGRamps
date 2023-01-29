@@ -22,5 +22,6 @@
     <string name="gender">Gender</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
-
+<!--                        -->
+    <string name="title_activity_start_up">StartUpActivity</string>
 </resources>

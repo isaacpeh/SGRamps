@@ -9,19 +9,23 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,6 +34,10 @@ public class UserDAO {
     FirebaseStorage storage;
 
     public UserDAO() {
+    }
+
+    public interface CreateCallback {
+        void onCallBack(String result);
     }
 
     public interface UserCallback {
@@ -54,16 +62,20 @@ public class UserDAO {
                                         .map(object -> Objects.toString(object, null))
                                         .collect(Collectors.toList());
 
-                                List<String> ramp = null;
-                                for (int i = 0; i < strings.size(); i++) {
-                                    String tempRamp = strings.get(i).replace("[", "");
-                                    tempRamp = tempRamp.replace("]", "");
-                                    ramp = new ArrayList<String>(Arrays.asList(tempRamp.split(", ")));
+                                List<String> ramp = new ArrayList<String>();
+                                if (!strings.get(0).contains("[]")) {
+                                    for (int i = 0; i < strings.size(); i++) {
+                                        String tempRamp = strings.get(i).replace("[", "");
+                                        tempRamp = tempRamp.replace("]", "");
+                                        ramp = new ArrayList<String>(Arrays.asList(tempRamp.split(", ")));
+                                    }
                                 }
                                 callback.onCallBack(ramp);
                             } else {
                                 // document dont exist
                                 Log.d("LOG", "FIRESTORE: User bookmarks does not exist");
+                                List<String> ramp = new ArrayList<String>();
+                                callback.onCallBack(ramp);
                             }
                         } else {
                             // error getting document
@@ -82,10 +94,67 @@ public class UserDAO {
     public void setBookmark(String email, String ramp_name) {
         db = FirebaseFirestore.getInstance();
         DocumentReference bookmarks = db.collection("bookmarks").document(email);
-        bookmarks.update("ramps", FieldValue.arrayUnion(ramp_name));
+        bookmarks.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        bookmarks.update("ramps", FieldValue.arrayUnion(ramp_name));
+                    } else {
+                        Map<String, Object> docData = new HashMap<>();
+                        docData.put("ramps", Arrays.asList(ramp_name));
+                        db.collection("bookmarks").document(email).set(docData);
+                    }
+                } else {
+                    Log.d("LOG", "FIRESTORE: Failed to get user bookmarks");
+                }
+            }
+        });
+
     }
 
     // USER DETAILS
+    public void createUser(UserModel user, CreateCallback callback) {
+        db = FirebaseFirestore.getInstance();
+        CollectionReference dbUser = db.collection("user");
+
+        dbUser.document(user.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String error = "User already exists";
+                        callback.onCallBack(error);
+                    } else {
+                        dbUser.document(user.getEmail())
+                                .set(user).
+                                addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d("LOG", " FIRESTORE: Successfully created user " + user.getEmail());
+                                        String result = "Successfully created user";
+                                        callback.onCallBack(result);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("LOG", "FIRESTORE: Failed to create user " + user.getEmail());
+                                        String error = "Failed to create user";
+                                        callback.onCallBack(error);
+                                    }
+                                });
+                    }
+                } else {
+                    String error = "Unknown error";
+                    callback.onCallBack(error);
+                }
+            }
+        });
+    }
+
     public void getUser(String email, UserCallback callback) {
         db = FirebaseFirestore.getInstance();
         db.collection("user").document(email).get()

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sgramps.adapters.RecyclerTilesItemAdapter;
 import com.example.sgramps.models.UserDAO;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -30,7 +32,8 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // logged in user
-        email = "isaac@gmail.com";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
 
         // initialize view
         view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
@@ -71,6 +74,7 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
         result.putString("ramp", adapter.getItem(position));
         getParentFragmentManager().setFragmentResult("requestKey", result);
         getParentFragmentManager().beginTransaction().hide(MainActivity.active).show(MainActivity.fragmentHome).commit();
+        MainActivity.active = MainActivity.fragmentHome;
         BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.bottom_navigation_view);
         mBottomNavigationView.setSelectedItemId(R.id.home_page);
     }
@@ -94,10 +98,11 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
         userDb.getBookmark(email, new UserDAO.BookmarkCallback() {
             @Override
             public void onCallBack(List<String> bookmarks) {
-                if (bookmarks.size() == 0) {
+                if (bookmarks == null || bookmarks.size() == 0) {
                     TextView txtTiles = view.findViewById(R.id.txtNoItems);
                     txtTiles.setText("- No bookmarks -");
                     txtTiles.setVisibility(View.VISIBLE);
+                    return;
                 }
                 showRecyclerView(bookmarks);
             }

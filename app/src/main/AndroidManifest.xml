@@ -22,12 +22,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_api" />
-
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <!-- Necessary for apps that target Android 9.0 or higher -->
-
+            android:value="@integer/google_play_services_version" /> <!-- Necessary for apps that target Android 9.0 or higher -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -50,6 +47,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="false">
@@ -58,13 +56,17 @@
                 android:value="" />
         </activity>
 
-<!--        <activity-->
-<!--            android:name=".UploadFragment"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".StartUpActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <service
-            android:name="HomeFragment"
-            android:foregroundServiceType="location"></service>
+            android:name=".HomeFragment"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
