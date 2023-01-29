@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +26,7 @@ public class emptyfragmenttoredirectto extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    TextView textView1;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -58,6 +62,12 @@ public class emptyfragmenttoredirectto extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_emptyfragmenttoredirectto, container, false);
+        View view = inflater.inflate(R.layout.fragment_emptyfragmenttoredirectto, container, false);
+        // Change textview1 text
+        textView1 = view.findViewById(R.id.textView1);
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+
+        textView1.setText(fAuth.getCurrentUser().getEmail());
+        return view;
     }
 }
