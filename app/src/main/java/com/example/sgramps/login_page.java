@@ -49,32 +49,36 @@ public class login_page extends Fragment {
                 view.clearFocus();
                 String emailString = email.getText().toString();
                 String passwordString = password.getText().toString();
+                if (emailString.isEmpty()) {
+                    email.setError("Email is required");
+                    email.requestFocus();
+                } else if (passwordString.isEmpty()) {
+                    password.setError("Password is required");
+                    password.requestFocus();
+                } else {
 
-                if (emailString.trim().length() == 0 || passwordString.trim().length() == 0) {
-                    Toast.makeText(getActivity(), "Please fill in email and password", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                fAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
-                        } else {
-                            if (task.getException().getMessage().contains("no user record") ||
-                                    task.getException().getMessage().contains("password is invalid")) {
-                                Toast.makeText(getActivity(), "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
+                    fAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
                             } else {
-                                Toast.makeText(getActivity(), "Error occurred logging in", Toast.LENGTH_SHORT).show();
+                                if (task.getException().getMessage().contains("no user record") ||
+                                        task.getException().getMessage().contains("password is invalid")) {
+                                    Toast.makeText(getActivity(), "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "Error occurred logging in", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
+
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +113,11 @@ public class login_page extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().
+
+                getOnBackPressedDispatcher().
+
+                addCallback(getActivity(), callback);
         return view;
     }
 

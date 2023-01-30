@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_register_background"
     android:gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".login_page"
-    android:background="@drawable/login_register_background">
+    tools:context=".login_page">
+    >
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -19,34 +20,53 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.45">
 
+        <!--Email-->
         <TextView
             android:id="@+id/textView"
             android:layout_width="242dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:text="Email Address" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailInput"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="242dp"
-            android:layout_height="wrap_content"
-            android:background="#30CDCDCD" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Password-->
         <TextView
             android:id="@+id/textView2"
             android:layout_width="242dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:text="Password" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/passwordInput"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="242dp"
-            android:layout_height="wrap_content"
-            android:background="#30CDCDCD" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:endIconMode="password_toggle">
 
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Login Button-->
         <Button
             android:id="@+id/loginButton"
             android:layout_width="242dp"
@@ -60,6 +80,7 @@
 
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
@@ -72,6 +93,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.87" />
 
+    <!--Register Button-->
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
