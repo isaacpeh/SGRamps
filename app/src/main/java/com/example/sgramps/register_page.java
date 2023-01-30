@@ -1,5 +1,6 @@
 package com.example.sgramps;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.sgramps.models.UserDAO;
 import com.example.sgramps.models.UserModel;
@@ -42,6 +44,15 @@ public class register_page extends Fragment {
     Button registerButton;
     TextView loginButton;
     FirebaseAuth fAuth;
+    protected Activity mActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,7 +160,7 @@ public class register_page extends Fragment {
                             .commit();
                     StartUpActivity.active = StartUpActivity.fragmentStartup;
                 } else {
-                    getActivity().finish();
+                    mActivity.finish();
                 }
             }
         };

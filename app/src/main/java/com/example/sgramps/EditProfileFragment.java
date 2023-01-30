@@ -49,16 +49,25 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import javax.crypto.SecretKey;
+
 public class EditProfileFragment extends Fragment {
     String[] gender = {"Male", "Female"};
+    private final String ALIAS_KEY = "sgramplogin";
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
     TextView txtEmail, txtName, editDob;
@@ -247,6 +256,16 @@ public class EditProfileFragment extends Fragment {
                             UserDAO userDb = new UserDAO();
                             userDb.uploadImage(user);
                             Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
+
+                            KeyStore keyStore = null;
+                            try {
+                                keyStore = KeyStore.getInstance("AndroidKeyStore");
+                                keyStore.load(null);
+                                keyStore.deleteEntry(ALIAS_KEY);
+                            } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            }
+
                             editPassword.setText("");
                             editNewPassword.setText("");
                         } else {
