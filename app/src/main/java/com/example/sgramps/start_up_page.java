@@ -26,24 +26,24 @@ public class start_up_page extends Fragment {
         View view = inflater.inflate(R.layout.fragment_start_up_page, container, false);
         Button loginButton = view.findViewById(R.id.loginButton);
         Button registerButton = view.findViewById(R.id.registerButton);
-        ImageCarousel imageCarousel = view.findViewById(R.id.startPageCarousel);
+        imageCarousel = view.findViewById(R.id.startPageCarousel);
         imageCarousel.registerLifecycle(getLifecycle());
 
         List<CarouselItem> list = new ArrayList<>();
 
         list.add (
                 new CarouselItem(
-                        "./drawable/placeholder.png"
+                        R.drawable.carousel1
                 )
         );
         list.add (
                 new CarouselItem(
-                        "./drawable/placeholder.png"
+                        R.drawable.carousel2
                 )
         );
         list.add (
                 new CarouselItem(
-                        "./drawable/placeholder.png"
+                        R.drawable.carousel3
                 )
         );
         imageCarousel.setData(list);
