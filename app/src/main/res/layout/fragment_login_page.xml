@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:maxLines="1"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--Login Button-->
@@ -76,6 +76,17 @@
             android:padding="15dp"
             android:shadowColor="@color/black"
             android:text="Login"
+            app:cornerRadius="5dp" />
+
+        <Button
+            android:id="@+id/biometricButton"
+            android:layout_width="242dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#5BCDE6"
+            android:padding="15dp"
+            android:shadowColor="@color/black"
+            android:text="Fingerprint"
             app:cornerRadius="5dp" />
 
     </LinearLayout>
