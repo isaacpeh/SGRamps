@@ -15,7 +15,10 @@
         <org.imaginativeworld.whynotimagecarousel.ImageCarousel
             android:id="@+id/startPageCarousel"
             android:layout_width="match_parent"
-            android:layout_height="576dp">
+            android:layout_height="576dp"
+            app:showTopShadow="false"
+            app:showBottomShadow="false"
+            app:showNavigationButtons="false">
 
             <ImageView
                 android:id="@+id/logoImage"

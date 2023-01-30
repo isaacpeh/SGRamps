@@ -38,7 +38,7 @@ public class register_page extends Fragment {
     String[] genderItems = {"Male", "Female"};
     AutoCompleteTextView gender;
     ArrayAdapter<String> adapterItems;
-    TextInputEditText displayName, email, password, dateOfBirth;
+    TextInputEditText displayName, email, password, dateOfBirth, number;
     Button registerButton;
     TextView loginButton;
     FirebaseAuth fAuth;
@@ -75,6 +75,7 @@ public class register_page extends Fragment {
         password = view.findViewById(R.id.passwordInput);
         registerButton = view.findViewById(R.id.registerButton);
         loginButton = view.findViewById(R.id.loginButton);
+        number = view.findViewById(R.id.phoneNumberInput);
 
         fAuth = FirebaseAuth.getInstance();
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +86,7 @@ public class register_page extends Fragment {
                 String parsedDisplayName = displayName.getText().toString();
                 String parsedDateOfBirth = dateOfBirth.getText().toString();
                 String parsedGender = gender.getText().toString();
+                String parsedNumber = number.getText().toString();
 
                 // Check if all fields are filled
                 if (TextUtils.isEmpty(parsedEmail)) {
@@ -110,9 +112,7 @@ public class register_page extends Fragment {
                             if (task.isSuccessful()) {
                                 String img_url = "https://firebasestorage.googleapis.com/v0/b/sgramps.appspot.com/o/" +
                                         "profileImages%2Fdefault_profile_pic.png?alt=media&token=0bedb541-f42e-4a40-99c7-d119dd8da84f";
-                                String number = "93834566";
-                                String parsedGender = "Male";
-                                UserModel user = new UserModel(parsedDisplayName, parsedEmail, parsedPassword, img_url, parsedGender, parsedDateOfBirth, number);
+                                UserModel user = new UserModel(parsedDisplayName, parsedEmail, parsedPassword, img_url, parsedGender, parsedDateOfBirth, parsedNumber);
                                 createUser(user);
                             } else {
                                 Toast.makeText(getActivity(), "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -156,6 +156,7 @@ public class register_page extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         return view;
     }
+
     // hide soft keyboard
     private void closeKeyboard() {
         View view = getActivity().getCurrentFocus();

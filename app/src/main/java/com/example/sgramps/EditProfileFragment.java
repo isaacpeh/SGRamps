@@ -210,8 +210,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void saveProfile() {
-        // Reauthenticate user
-        // https://firebase.google.com/docs/auth/android/manage-users#re-authenticate_a_user
         String current_password = editPassword.getText().toString();
         if (current_password.trim().length() == 0) {
             Toast.makeText(getContext(), "Enter password to update", Toast.LENGTH_SHORT).show();
@@ -224,7 +222,7 @@ public class EditProfileFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()) { // successfully checked password
                             String name = editName.getText().toString();
                             String number = editNumber.getText().toString();
                             String dob = editDob.getText().toString();
@@ -241,13 +239,16 @@ public class EditProfileFragment extends Fragment {
                             if (new_password.trim().length() == 0) {
                                 user = new UserModel(name, email, imgUri, gender, dob, number);
                             } else {
+                                loggedInUser.updatePassword(new_password);
                                 user = new UserModel(name, email, new_password, imgUri, gender, dob, number);
+
                             }
 
                             UserDAO userDb = new UserDAO();
                             userDb.uploadImage(user);
                             Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
                             editPassword.setText("");
+                            editNewPassword.setText("");
                         } else {
                             Toast.makeText(getContext(), "Password is incorrect", Toast.LENGTH_SHORT).show();
                         }
