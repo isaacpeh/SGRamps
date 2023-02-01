@@ -80,9 +80,9 @@
 
         <ImageButton
             android:id="@+id/biometricButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="45dp"
             android:layout_gravity="center"
             android:background="@null"
             android:scaleType="fitXY"
