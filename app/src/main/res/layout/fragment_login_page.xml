@@ -75,19 +75,19 @@
             android:backgroundTint="#5BCDE6"
             android:padding="15dp"
             android:shadowColor="@color/black"
-            android:text="Login"
+            android:text="@string/login"
             app:cornerRadius="5dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/biometricButton"
-            android:layout_width="242dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="#5BCDE6"
-            android:padding="15dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:scaleType="fitXY"
             android:shadowColor="@color/black"
-            android:text="Fingerprint"
-            app:cornerRadius="5dp" />
+            android:src="@drawable/fingerprint" />
 
     </LinearLayout>
 
@@ -104,12 +104,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.87" />
 
-    <!--Register Button-->
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,12 +117,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.097" />
 
+    <!--Register Button-->
     <TextView
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:text="Register"
+        android:text="@string/register"
         android:textColor="#225460"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

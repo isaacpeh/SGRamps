@@ -39,6 +39,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!--Login Button-->
             <Button
                 android:id="@+id/loginButton"
                 android:layout_width="310dp"
@@ -51,6 +52,7 @@
                 android:text="@string/login"
                 android:textAlignment="center" />
 
+            <!--Register Button-->
             <Button
                 android:id="@+id/registerButton"
                 android:layout_width="310dp"

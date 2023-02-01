@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +65,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 public class login_page extends Fragment {
 
     TextInputEditText email, password;
-    Button loginButton, fingerprintButton;
+    Button loginButton;
+
+    ImageButton fingerprintButton;
+
     TextView registerButton;
     FirebaseAuth fAuth;
     private Executor executor;
