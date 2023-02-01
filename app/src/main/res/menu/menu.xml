@@ -19,11 +19,11 @@
     android:title="Upload">
     </item>
 
-    <item android:id="@+id/notification_page"
+    <!--<item android:id="@+id/notification_page"
         android:enabled="true"
         android:icon="@drawable/notification_icon_selection"
         android:title="Updates">
-    </item>
+    </item>-->
 
     <item android:id="@+id/profile_page"
         android:enabled="true"

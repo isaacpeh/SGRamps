@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,13 @@ public class EditProfileFragment extends Fragment {
     Button btnSave;
     ImageButton btnProfile;
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,13 @@ public class UploadFragment extends Fragment implements AddImagesItemAdapter.Ite
     Button btnLocation, btnCreate;
     TextInputEditText txtName, txtLat, txtLong, txtDes;
     String email;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

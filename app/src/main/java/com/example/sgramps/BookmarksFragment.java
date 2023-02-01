@@ -1,6 +1,7 @@
 package com.example.sgramps;
 
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,13 @@ public class BookmarksFragment extends Fragment implements RecyclerTilesItemAdap
     RecyclerView mRecyclerView;
     View view;
     String email;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
