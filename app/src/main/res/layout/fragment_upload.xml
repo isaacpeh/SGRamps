@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:inputType="textPersonName"
-                android:text="Ramp name"
+                android:text="Ramp Name"
                 android:textColor="@color/textColor"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -91,7 +91,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:background="@color/white"
-                    android:hint="latitude"
+                    android:hint="Latitude"
                     app:boxStrokeColor="@color/buttonColor"
                     app:hintTextColor="@color/buttonColor">
 
