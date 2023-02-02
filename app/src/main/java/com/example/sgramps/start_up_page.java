@@ -1,6 +1,7 @@
 package com.example.sgramps;
 
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,14 @@ import java.util.List;
 
 public class start_up_page extends Fragment {
     ImageCarousel imageCarousel;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,17 +40,17 @@ public class start_up_page extends Fragment {
 
         List<CarouselItem> list = new ArrayList<>();
 
-        list.add (
+        list.add(
                 new CarouselItem(
                         R.drawable.carousel1
                 )
         );
-        list.add (
+        list.add(
                 new CarouselItem(
                         R.drawable.carousel2
                 )
         );
-        list.add (
+        list.add(
                 new CarouselItem(
                         R.drawable.carousel3
                 )
@@ -55,7 +64,6 @@ public class start_up_page extends Fragment {
                         .beginTransaction()
                         .replace(R.id.frame_layout, fragment)
                         .commit();
-
                 StartUpActivity.active = StartUpActivity.fragmentLogin;
             }
         });

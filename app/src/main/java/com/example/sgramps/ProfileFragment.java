@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     String email;
     TextView txtEmail, txtName;
     ImageView imgProfile;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +77,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.btnLogoff:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getActivity(), StartUpActivity.class);
+                getParentFragmentManager().beginTransaction().detach(MainActivity.fragmentHome).commitNow();
                 startActivity(intent);
                 getActivity().finish();
                 break;

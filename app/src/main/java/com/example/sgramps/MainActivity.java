@@ -63,12 +63,6 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.frame_layout, fragmentContribution, "7").commit();
         fm.beginTransaction().add(R.id.frame_layout, fragmentReport, "8").commit();
 
-        /*Fragment fragment = new HomeFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frame_layout, fragment)
-                .commit();*/
-
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -86,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.upload_page:
                         fm.beginTransaction().hide(active).show(fragmentUpload).commit();
                         active = fragmentUpload;
-                        return true;
-                    case R.id.notification_page:
-
                         return true;
                     case R.id.profile_page:
                         fm.beginTransaction().detach(fragmentProfile).commit();
@@ -111,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bookmarks_page:
                         return;
                     case R.id.upload_page:
-                        return;
-                    case R.id.notification_page:
                         return;
                     case R.id.profile_page:
                         return;
