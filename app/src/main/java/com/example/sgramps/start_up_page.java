@@ -2,15 +2,12 @@ package com.example.sgramps;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;

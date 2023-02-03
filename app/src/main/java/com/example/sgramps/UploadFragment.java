@@ -14,15 +14,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.transition.TransitionInflater;
@@ -52,11 +49,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TooManyListenersException;
 
 public class UploadFragment extends Fragment implements AddImagesItemAdapter.ItemClickListener {
     AddImagesItemAdapter adapter;
